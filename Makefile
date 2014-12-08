@@ -1,16 +1,15 @@
-CXX      := c++ 
+CXX      := c++
 CXXFLAGS := -O2 -std=c++11 -I.
 LDFLAGS  := -L.
 LDLIBS   :=
+TARGET   := main
 HEADERS  := $(wildcard *.h)
 
-all: main
-
-main: main.o
+$(TARGET): $(TARGET).o
 	$(CXX) $(LDFLAGS) -o $@ $< $(LDLIBS)
 
-main.o: main.cpp $(HEADERS)
+$(TARGET).o: $(TARGET).cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c $<
 
 clean:
-	-@$(RM) main main.o
+	-@$(RM) $(TARGET) $(TARGET).o
