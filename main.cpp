@@ -11,6 +11,9 @@
 #include "TGraph.h"
 #include "TCanvas.h"
 #include "TMultiGraph.h"
+#include "TAxis.h"
+#include "TLegend.h"
+#include "TLatex.h"
 
 #include "boost/program_options.hpp"
 
@@ -120,45 +123,81 @@ int main(int argc, char *argv[])
     p1.add_step(new_kv1);
     p2.add_step(new_kv2);
     
-    std::cout << separation << " " << projectile_radius + target_radius << std::endl;
+//    std::cout << separation << " " << projectile_radius + target_radius << std::endl;
     sep_vector.push_back(separation);
     time_vector.push_back(initial_time+delta_t*i);
     
     i++;
   } while ( separation <= ( projectile_radius + target_radius ) ) ;
 
+
+/*
   std::cout << " ****\t******\t*****\t******\t** " << std::endl;
   std::cout << " * x \t * y \t * vx \t * vy \t * " << std::endl;
   for ( auto const& step : p1.kinvecs() ) {
     std::cout << " * " << step.x() << " \t * " << step.y() << " \t * " << step.vx() << " \t * " << step.vy() << " \t * " << std::endl;
   }
+
+  TApplication tapp("tapp",&argc,argv);
+
+*/
+
+
+  // Seperation vs time graph
+  TCanvas* c1 = new TCanvas("c1"," ",400,350);
   
   TGraph *sep_graph = new TGraph(sep_vector.size(),&time_vector[0],&sep_vector[0]);
-  sep_graph->SetMarkerStyle(8);
+  sep_graph->GetXaxis()->SetTitle("t");
+  sep_graph->GetYaxis()->SetTitle("#||{#vec{x_{1}}-#vec{x_{2}}}");
+  sep_graph->SetMarkerStyle(7);
+  sep_graph->Draw("AP");
+  sep_graph->SetTitle("Radial Seperation vs Time");
+
+//  gPad->Modified();
+  c1->Print("out/sep_vs_t.pdf", "Portrait pdf");
+
+
+  // x vs y graph
+  TCanvas* c2 = new TCanvas("c2"," ",400,350);
 
   TGraph *xy1 = new TGraph();
+  xy1->SetName("Target");
   TGraph *xy2 = new TGraph();
+  xy2->SetName("Projectile");
+
   for ( auto j = 0; j < p1.kinvecs().size(); ++j ) {
     xy1->SetPoint(j,p1.kinvecs().at(j).x(),p1.kinvecs().at(j).y());
     xy2->SetPoint(j,p2.kinvecs().at(j).x(),p2.kinvecs().at(j).y());
   }
-  
+ 
 
-  TApplication tapp("tapp",&argc,argv);
-  TCanvas c1;
-  sep_graph->Draw("AP");
-
-  TCanvas c2;
   TMultiGraph *mgxy = new TMultiGraph();
-  xy1->SetMarkerStyle(8);
-  xy1->SetMarkerColor(kRed);
-  xy2->SetMarkerStyle(8);
-  xy2->SetMarkerStyle(kBlue);
+  xy1->SetMarkerStyle(7);
+  xy1->SetMarkerColor(kBlack);
+  xy2->SetMarkerStyle(7);
+  xy2->SetMarkerColor(kBlue);
   mgxy->Add(xy1);
   mgxy->Add(xy2);
   mgxy->Draw("AP");
 
-  tapp.Run();
+  mgxy->SetTitle("Center of Mass Trajectories");
+  mgxy->GetXaxis()->SetTitle("x");
+  mgxy->GetYaxis()->SetTitle("y");
 
+  TLegend* mgxyleg = new TLegend(0.15,0.75,0.4,0.9);
+  mgxyleg->AddEntry(xy2,"Projectile","p");
+  mgxyleg->AddEntry(xy1,"Target","p");
+  mgxyleg->Draw();
+
+  gPad->Modified();
+  c2->Print("out/x_vx_y.pdf", "Portrait pdf");
+
+
+  // Force vs time graph
+
+
+
+
+//  tapp.Run();
   return 0;
 }
