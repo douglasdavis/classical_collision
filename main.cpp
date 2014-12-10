@@ -76,14 +76,16 @@ int main(int argc, char *argv[])
 
   p1.add_step(initial_kinvec1);
   p2.add_step(initial_kinvec2);
-  
+
   std::vector<double> sep_vector;
   std::vector<double> time_vector;
   std::vector<double> Fmag_vector;
-  double initial_separation = projectile_radius + target_radius;
-  sep_vector.push_back(initial_separation);
-  double initial_time = 0.0;
-  time_vector.push_back(initial_time);
+  std::vector<double> CM_x_vector;
+  std::vector<double> CM_y_vector;
+  CM_x_vector.push_back((initial_kinvec1.x()*target_mass + initial_kinvec2.x()*projectile_mass)/(projectile_mass+target_mass));
+  CM_y_vector.push_back((initial_kinvec1.y()*target_mass + initial_kinvec2.y()*projectile_mass)/(projectile_mass+target_mass));
+  sep_vector.push_back(projectile_radius + target_radius);
+  time_vector.push_back(0.0);
 
   double separation;      // |position1 - position2|
   double Fx, Fy, Fmag;    // force components, magnitude
@@ -120,12 +122,17 @@ int main(int argc, char *argv[])
     new_kv2.set_vx((1-eta)*p2.kinvecs().at(i-1).vx() + Fmag*Fx*delta_t);
     new_kv2.set_vy((1-eta)*p2.kinvecs().at(i-1).vy() + Fmag*Fy*delta_t);
 
+
+    // __ center of mass
+    CM_x_vector.push_back((p1.kinvecs().at(i-1).x()*target_mass + p2.kinvecs().at(i-1).x()*projectile_mass)/(projectile_mass+target_mass));
+    CM_y_vector.push_back((p1.kinvecs().at(i-1).y()*target_mass + p2.kinvecs().at(i-1).y()*projectile_mass)/(projectile_mass+target_mass));
+    
     p1.add_step(new_kv1);
     p2.add_step(new_kv2);
     
 //    std::cout << separation << " " << projectile_radius + target_radius << std::endl;
     sep_vector.push_back(separation);
-    time_vector.push_back(initial_time+delta_t*i);
+    time_vector.push_back(delta_t*i);
     
     i++;
   } while ( separation <= ( projectile_radius + target_radius ) ) ;
