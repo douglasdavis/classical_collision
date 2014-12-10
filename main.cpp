@@ -7,22 +7,55 @@
 #include <vector>
 #include <cmath>
 
-int main(int argc, char *argv[])
- {
-  double projectile_mass   = 1.00;
-  double projectile_radius = 1.00;
-  double projectile_vx0    = 10.0; // initial velocity of project (complete in x dir)
+#include "TApplication.h"
+#include "TGraph.h"
+#include "TCanvas.h"
+#include "TMultiGraph.h"
 
-  double target_mass       = 3.00;
-  double target_radius     = 3.00;
+#include "boost/program_options.hpp"
+
+int main(int argc, char *argv[])
+{
+  namespace po = boost::program_options;
+  po::options_description desc("options");
+  desc.add_options()
+    ("help,h","Print help message")
+    ("p-radius", po::value<double>()->default_value(1.000),"projectile radius")
+    ("t-radius", po::value<double>()->default_value(3.000),"target radius")
+    ("p-mass",   po::value<double>()->default_value(1.000),"projectile mass")
+    ("t-mass",   po::value<double>()->default_value(5.000),"target mass")
+    ("p-vinit",  po::value<double>()->default_value(5.000),"projectile initial velocity")
+    ("delta-t,t",  po::value<double>()->default_value(0.001),"time step")
+    ("impact,s", po::value<double>()->default_value(1.000),"impact parameter")
+    ("spring,k", po::value<double>()->default_value(1.000),"spring constant")
+    ("eta,e",     po::value<double>()->default_value(0.000),"energy disipation")
+    ("lambda,l",   po::value<double>()->default_value(1.000),"power law");
+
+  po::variables_map vm;
+  po::store(po::parse_command_line(argc,argv,desc),vm);
+  po::notify(vm);
+
+  if ( vm.count("help") ) {
+    std::cout << desc << std::endl;
+    return 0;
+  }
+    
+  double delta_t           = vm["delta-t"].as<double>();
+
+  double projectile_mass   = vm["p-mass"].as<double>();
+  double projectile_radius = vm["p-radius"].as<double>();
+  double projectile_vx0    = vm["p-vinit"].as<double>(); // initial velocity of project (complete in x dir)
+  
+  double target_mass       = vm["t-mass"].as<double>();
+  double target_radius     = vm["t-radius"].as<double>();
   double target_x0         = 1.00; // initial x position of the target
   double target_y0         = 0.00; // initial y position of the target
   
-  double impact_paramter   = 2.00;
+  double impact_paramter   = vm["impact"].as<double>();
 
-  double K      = 1;               // spring constant
-  double Lambda = 1;               // force power law
-  double eta    = 0;               // energy disapation parameter (0 = none) (fraction loss/time step)
+  double K      = vm["spring"].as<double>();               // spring constant
+  double Lambda = vm["lambda"].as<double>();               // force power law
+  double eta    = vm["eta"].as<double>();               // energy disapation parameter (0 = none) (fraction loss/time step)
   
   particle p1(target_mass,target_radius);
   particle p2(projectile_mass,projectile_radius);
@@ -41,11 +74,19 @@ int main(int argc, char *argv[])
   p1.add_step(initial_kinvec1);
   p2.add_step(initial_kinvec2);
   
+  std::vector<double> sep_vector;
+  std::vector<double> time_vector;
+  std::vector<double> Fmag_vector;
+  double initial_separation = projectile_radius + target_radius;
+  sep_vector.push_back(initial_separation);
+  double initial_time = 0.0;
+  time_vector.push_back(initial_time);
+
   double separation;      // |position1 - position2|
   double Fx, Fy, Fmag;    // force components, magnitude
   
-  for ( auto i = 1; i < 10; ++i ) {
-
+  int i = 1;  
+  do {
     // First we calculate the serpation of the particles determined from the
     // previous time step for calculations in the current step.
     // We also define force componenets for calculations in the current step.
@@ -59,29 +100,65 @@ int main(int argc, char *argv[])
     // ( k * sqrt[ r1 + r2 - separation ]^(lambda) = k*displacement_from_equilbrium raised to lambda
     Fmag = K*std::pow(((p1.radius() + p2.radius()) - separation),Lambda);
     
-    kinvec temp_vec1;
-    kinvec temp_vec2;
+    kinvec new_kv1;
+    kinvec new_kv2;
 
-    temp_vec1.set_params(p1.kinvecs().at(i-1).x()+1,
-			 p1.kinvecs().at(i-1).y()+1,
-			 p1.kinvecs().at(i-1).vx()+1,
-			 p1.kinvecs().at(i-1).vy()+1);
+    // ___ target
+    new_kv1.set_x(p1.kinvecs().at(i-1).x() + p1.kinvecs().at(i-1).vx()*delta_t + 0.5*Fmag*(-1)*Fx*delta_t*delta_t);
+    new_kv1.set_y(p1.kinvecs().at(i-1).y() + p1.kinvecs().at(i-1).vy()*delta_t + 0.5*Fmag*(-1)*Fy*delta_t*delta_t);
 
-    temp_vec2.set_params(p2.kinvecs().at(i-1).x()+i,
-			 p2.kinvecs().at(i-1).y()+i,
-			 p2.kinvecs().at(i-1).vx()+i,
-			 p2.kinvecs().at(i-1).vy()+i);
-    
-    p1.add_step(temp_vec1);
-    p2.add_step(temp_vec2);
-    
-    std::cout << separation << std::endl;
-    
-  }
+    new_kv1.set_vx((1-eta)*p1.kinvecs().at(i-1).vx() + Fmag*(-1)*Fx*delta_t);
+    new_kv1.set_vy((1-eta)*p1.kinvecs().at(i-1).vy() + Fmag*(-1)*Fy*delta_t);
 
+    // ___ projectile
+    new_kv2.set_x(p2.kinvecs().at(i-1).x() + p2.kinvecs().at(i-1).vx()*delta_t + 0.5*Fmag*Fx*delta_t*delta_t);
+    new_kv2.set_y(p2.kinvecs().at(i-1).y() + p2.kinvecs().at(i-1).vy()*delta_t + 0.5*Fmag*Fy*delta_t*delta_t);
+
+    new_kv2.set_vx((1-eta)*p2.kinvecs().at(i-1).vx() + Fmag*Fx*delta_t);
+    new_kv2.set_vy((1-eta)*p2.kinvecs().at(i-1).vy() + Fmag*Fy*delta_t);
+
+    p1.add_step(new_kv1);
+    p2.add_step(new_kv2);
+    
+    std::cout << separation << " " << projectile_radius + target_radius << std::endl;
+    sep_vector.push_back(separation);
+    time_vector.push_back(initial_time+delta_t*i);
+    
+    i++;
+  } while ( separation <= ( projectile_radius + target_radius ) ) ;
+
+  std::cout << " ****\t******\t*****\t******\t** " << std::endl;
+  std::cout << " * x \t * y \t * vx \t * vy \t * " << std::endl;
   for ( auto const& step : p1.kinvecs() ) {
-    std::cout << step.y() << " " << step.vy() << std::endl;
+    std::cout << " * " << step.x() << " \t * " << step.y() << " \t * " << step.vx() << " \t * " << step.vy() << " \t * " << std::endl;
   }
   
+  TGraph *sep_graph = new TGraph(sep_vector.size(),&time_vector[0],&sep_vector[0]);
+  sep_graph->SetMarkerStyle(8);
+
+  TGraph *xy1 = new TGraph();
+  TGraph *xy2 = new TGraph();
+  for ( auto j = 0; j < p1.kinvecs().size(); ++j ) {
+    xy1->SetPoint(j,p1.kinvecs().at(j).x(),p1.kinvecs().at(j).y());
+    xy2->SetPoint(j,p2.kinvecs().at(j).x(),p2.kinvecs().at(j).y());
+  }
+  
+
+  TApplication tapp("tapp",&argc,argv);
+  TCanvas c1;
+  sep_graph->Draw("AP");
+
+  TCanvas c2;
+  TMultiGraph *mgxy = new TMultiGraph();
+  xy1->SetMarkerStyle(8);
+  xy1->SetMarkerColor(kRed);
+  xy2->SetMarkerStyle(8);
+  xy2->SetMarkerStyle(kBlue);
+  mgxy->Add(xy1);
+  mgxy->Add(xy2);
+  mgxy->Draw("AP");
+
+  tapp.Run();
+
   return 0;
 }

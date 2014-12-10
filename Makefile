@@ -1,7 +1,7 @@
 CXX      := c++
-CXXFLAGS := -O2 -std=c++11 -I.
-LDFLAGS  := -L.
-LDLIBS   :=
+CXXFLAGS := -O2 -std=c++11 -I. `root-config --cflags` -I/usr/include/boost
+LDFLAGS  := -O2 -L. `root-config --ldflags --glibs` -L/usr/lib
+LDLIBS   := -lboost_program_options
 TARGET   := main
 HEADERS  := $(wildcard *.h)
 
