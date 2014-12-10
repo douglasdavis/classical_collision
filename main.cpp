@@ -9,27 +9,40 @@
 
 int main(int argc, char *argv[])
  {
-  double projectile_mass   = 1.0;
-  double projectile_radius = 1.0;
-  double target_mass       = 1.0;
-  double target_radius     = 1.0;
+  double projectile_mass   = 1.00;
+  double projectile_radius = 1.00;
+  double projectile_vx0    = 10.0; // initial velocity of project (complete in x dir)
 
+  double target_mass       = 3.00;
+  double target_radius     = 3.00;
+  double target_x0         = 1.00; // initial x position of the target
+  double target_y0         = 0.00; // initial y position of the target
+  
+  double impact_paramter   = 2.00;
+
+  double K      = 1;               // spring constant
+  double Lambda = 1;               // force power law
+  double eta    = 0;               // energy disapation parameter (0 = none) (fraction loss/time step)
+  
   particle p1(target_mass,target_radius);
   particle p2(projectile_mass,projectile_radius);
 
-  kinvec initial_vec1;
-  kinvec initial_vec2;
+  // ____________________________________________________________
   
-  initial_vec1.set_params(1,2,3,4);
-  initial_vec2.set_params(2,5,6,8);
+  kinvec initial_kinvec1;
+  kinvec initial_kinvec2;
 
-  p1.add_step(initial_vec1);
-  p2.add_step(initial_vec2);
+  double projectile_x0 = target_x0 - std::cos(std::asin(impact_paramter/(target_radius+projectile_radius)))*(target_radius+projectile_radius);
+  double projectile_y0 = impact_paramter;
+  
+  initial_kinvec1.set_params(target_x0,target_y0,0,0); // target initial params (target as 0 velocity)
+  initial_kinvec2.set_params(projectile_x0,projectile_y0,projectile_vx0,0.0); // projectile initial params (initial vy is 0)
+
+  p1.add_step(initial_kinvec1);
+  p2.add_step(initial_kinvec2);
   
   double separation;      // |position1 - position2|
   double Fx, Fy, Fmag;    // force components, magnitude
-  double K = 1;           // spring constant
-  double Lambda = 1;      // force power law
   
   for ( auto i = 1; i < 10; ++i ) {
 
@@ -67,7 +80,7 @@ int main(int argc, char *argv[])
   }
 
   for ( auto const& step : p1.kinvecs() ) {
-    std::cout << step.x() << " " << step.vx() << std::endl;
+    std::cout << step.y() << " " << step.vy() << std::endl;
   }
   
   return 0;
