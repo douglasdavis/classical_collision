@@ -126,7 +126,8 @@ int main(int argc, char *argv[])
 //    std::cout << separation << " " << projectile_radius + target_radius << std::endl;
     sep_vector.push_back(separation);
     time_vector.push_back(initial_time+delta_t*i);
-    
+    Fmag_vector.push_back(Fmag);   
+ 
     i++;
   } while ( separation <= ( projectile_radius + target_radius ) ) ;
 
@@ -153,7 +154,6 @@ int main(int argc, char *argv[])
   sep_graph->Draw("AP");
   sep_graph->SetTitle("Radial Seperation vs Time");
 
-//  gPad->Modified();
   c1->Print("out/sep_vs_t.pdf", "Portrait pdf");
 
 
@@ -195,8 +195,16 @@ int main(int argc, char *argv[])
 
   // Force vs time graph
 
+  TCanvas* c3 = new TCanvas("c3"," ",400,350);
 
+  TGraph *Fmag_graph = new TGraph(Fmag_vector.size(),&time_vector[0],&Fmag_vector[0]);
+  Fmag_graph->GetXaxis()->SetTitle("t");
+  Fmag_graph->GetYaxis()->SetTitle("#||{F}");
+  Fmag_graph->SetMarkerStyle(7);
+  Fmag_graph->Draw("AP");
+  Fmag_graph->SetTitle("Force Magnitude vs Time");
 
+  c3->Print("out/Fmag_vs_t.pdf", "Portrait pdf");
 
 //  tapp.Run();
   return 0;
