@@ -82,8 +82,12 @@ int main(int argc, char *argv[])
   std::vector<double> Fmag_vector;
   std::vector<double> CM_x_vector;
   std::vector<double> CM_y_vector;
+  std::vector<double> CM_vx_vector;
+  std::vector<double> CM_vy_vector;
   CM_x_vector.push_back((initial_kinvec1.x()*target_mass + initial_kinvec2.x()*projectile_mass)/(projectile_mass+target_mass));
   CM_y_vector.push_back((initial_kinvec1.y()*target_mass + initial_kinvec2.y()*projectile_mass)/(projectile_mass+target_mass));
+  CM_vx_vector.push_back((initial_kinvec1.vx()*target_mass + initial_kinvec2.vx()*projectile_mass)/(projectile_mass+target_mass));
+  CM_vy_vector.push_back((initial_kinvec1.vy()*target_mass + initial_kinvec2.vy()*projectile_mass)/(projectile_mass+target_mass));
   sep_vector.push_back(projectile_radius + target_radius);
   time_vector.push_back(0.0);
 
@@ -126,7 +130,10 @@ int main(int argc, char *argv[])
     // __ center of mass
     CM_x_vector.push_back((p1.kinvecs().at(i-1).x()*target_mass + p2.kinvecs().at(i-1).x()*projectile_mass)/(projectile_mass+target_mass));
     CM_y_vector.push_back((p1.kinvecs().at(i-1).y()*target_mass + p2.kinvecs().at(i-1).y()*projectile_mass)/(projectile_mass+target_mass));
-    
+   
+    CM_vx_vector.push_back((p1.kinvecs().at(i-1).vx()*target_mass + p2.kinvecs().at(i-1).vx()*projectile_mass)/(projectile_mass+target_mass));
+    CM_vy_vector.push_back((p1.kinvecs().at(i-1).vy()*target_mass + p2.kinvecs().at(i-1).vy()*projectile_mass)/(projectile_mass+target_mass));
+ 
     p1.add_step(new_kv1);
     p2.add_step(new_kv2);
     
@@ -171,6 +178,8 @@ int main(int argc, char *argv[])
   xy1->SetName("Target");
   TGraph *xy2 = new TGraph();
   xy2->SetName("Projectile");
+  TGraph *CM_xy_graph = new TGraph(CM_x_vector.size(),&CM_x_vector[0],&CM_y_vector[0]);
+  CM_xy_graph->SetName("Center of Mass");
 
   for ( auto j = 0; j < p1.kinvecs().size(); ++j ) {
     xy1->SetPoint(j,p1.kinvecs().at(j).x(),p1.kinvecs().at(j).y());
@@ -183,8 +192,11 @@ int main(int argc, char *argv[])
   xy1->SetMarkerColor(kBlack);
   xy2->SetMarkerStyle(7);
   xy2->SetMarkerColor(kBlue);
+  CM_xy_graph->SetMarkerStyle(7);
+  CM_xy_graph->SetMarkerColor(kGreen);
   mgxy->Add(xy1);
   mgxy->Add(xy2);
+  mgxy->Add(CM_xy_graph);
   mgxy->Draw("AP");
 
   mgxy->SetTitle("Center of Mass Trajectories");
@@ -194,10 +206,52 @@ int main(int argc, char *argv[])
   TLegend* mgxyleg = new TLegend(0.15,0.75,0.4,0.9);
   mgxyleg->AddEntry(xy2,"Projectile","p");
   mgxyleg->AddEntry(xy1,"Target","p");
+  mgxyleg->AddEntry(CM_xy_graph,"Center of Mass","p");
   mgxyleg->Draw();
 
   gPad->Modified();
-  c2->Print("out/x_vx_y.pdf", "Portrait pdf");
+  c2->Print("out/x_vs_y.pdf", "Portrait pdf");
+
+  // vx vs vy graph
+  TCanvas* c4 = new TCanvas("c4"," ",400,350);
+
+  TGraph *vxy1 = new TGraph();
+  vxy1->SetName("Target");
+  TGraph *vxy2 = new TGraph();
+  vxy2->SetName("Projectile");
+  TGraph *CM_vxy_graph = new TGraph(CM_vx_vector.size(),&CM_vx_vector[0],&CM_vy_vector[0]);
+  CM_vxy_graph->SetName("Center of Mass");
+
+  for ( auto j = 0; j < p1.kinvecs().size(); ++j ) {
+    vxy1->SetPoint(j,p1.kinvecs().at(j).vx(),p1.kinvecs().at(j).vy());
+    vxy2->SetPoint(j,p2.kinvecs().at(j).vx(),p2.kinvecs().at(j).vy());
+  }
+ 
+
+  TMultiGraph *mgvxy = new TMultiGraph();
+  vxy1->SetMarkerStyle(7);
+  vxy1->SetMarkerColor(kBlack);
+  vxy2->SetMarkerStyle(7);
+  vxy2->SetMarkerColor(kBlue);
+  CM_vxy_graph->SetMarkerStyle(7);
+  CM_vxy_graph->SetMarkerColor(kGreen);
+  mgvxy->Add(vxy1);
+  mgvxy->Add(vxy2);
+  mgvxy->Add(CM_vxy_graph);
+  mgvxy->Draw("AP");
+
+  mgvxy->SetTitle("Center of Mass Velocities");
+  mgvxy->GetXaxis()->SetTitle("v_{x}");
+  mgvxy->GetYaxis()->SetTitle("v_{y}");
+
+  TLegend* mgvxyleg = new TLegend(0.15,0.75,0.4,0.9);
+  mgvxyleg->AddEntry(vxy2,"Projectile","p");
+  mgvxyleg->AddEntry(vxy1,"Target","p");
+  mgvxyleg->AddEntry(CM_vxy_graph,"Center of Mass","p");
+  mgvxyleg->Draw();
+
+  gPad->Modified();
+  c4->Print("out/vx_vs_vy.pdf", "Portrait pdf");
 
 
   // Force vs time graph
