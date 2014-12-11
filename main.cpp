@@ -30,10 +30,11 @@ int main(int argc, char *argv[])
     ("t-mass",   po::value<double>()->default_value(5.000),"target mass")
     ("p-vinit",  po::value<double>()->default_value(5.000),"projectile initial velocity")
     ("delta-t,t",po::value<double>()->default_value(0.001),"time step")
-    ("impact,s", po::value<double>()->default_value(1.000),"impact parameter")
-    ("spring,k", po::value<double>()->default_value(1.000),"spring constant")
+    ("impact,s", po::value<double>()->default_value(2.000),"impact parameter")
+    ("spring,k", po::value<double>()->default_value(100.0),"spring constant")
     ("eta,e",    po::value<double>()->default_value(0.000),"energy disipation")
-    ("lambda,l", po::value<double>()->default_value(1.000),"power law");
+    ("lambda,l", po::value<double>()->default_value(1.000),"power law")
+    ("case,c", po::value<int>()->default_value(0),"case selection\n0  defaults\n1  hard k, off center\n2  hard k, on center\n3  soft k, off center\n4  soft k, on center\n5  hard k, equal balls, on center");
 
   po::variables_map vm;
   po::store(po::parse_command_line(argc,argv,desc),vm);
@@ -45,7 +46,7 @@ int main(int argc, char *argv[])
   }
     
   double delta_t           = vm["delta-t"].as<double>();
-  double max_frac_Dx	   = 0.01; // Largest allowed change in position per timestep
+  double max_frac_Dx	   = 0.01; // largest allowed change in position per timestep
 
   double projectile_mass   = vm["p-mass"].as<double>();
   double projectile_radius = vm["p-radius"].as<double>();
@@ -56,12 +57,30 @@ int main(int argc, char *argv[])
   double target_x0         = 1.00; // initial x position of the target
   double target_y0         = 0.00; // initial y position of the target
   
-  double impact_paramter   = vm["impact"].as<double>();
+  double impact_parameter   = vm["impact"].as<double>();
 
   double K      = vm["spring"].as<double>();               // spring constant
   double Lambda = vm["lambda"].as<double>();               // force power law
-  double eta    = vm["eta"].as<double>();               // energy disapation parameter (0 = none) (fraction loss/time step)
+  double eta    = vm["eta"].as<double>();                  // energy disapation parameter (0 = none) (fraction loss/time step)
   
+  double my_case      = vm["case"].as<int>();           // case selection
+
+  if(my_case != 0){
+    if(my_case == 1)
+	K = 100.0, impact_parameter = (2/3)*target_radius;
+    if(my_case == 2)
+        K = 100.0, impact_parameter = 0;
+    if(my_case == 3)
+        K = 10.0,  impact_parameter = (2/3)*target_radius;
+    if(my_case == 4)
+        K = 10.0,  impact_parameter = 0;
+    if(my_case == 5)
+        K = 1000.0, target_radius = 1.00, projectile_radius = 1.00, target_mass = 5.00, projectile_mass = 5.00, impact_parameter = 0.00;
+    }
+    else{
+	std::cout << "case parameter out of bounds, using defaults" << std::endl;
+    }
+
   particle p1(target_mass,target_radius);
   particle p2(projectile_mass,projectile_radius);
 
@@ -70,8 +89,8 @@ int main(int argc, char *argv[])
   kinvec initial_kinvec1;
   kinvec initial_kinvec2;
 
-  double projectile_x0 = target_x0 - std::cos(std::asin(impact_paramter/(target_radius+projectile_radius)))*(target_radius+projectile_radius);
-  double projectile_y0 = impact_paramter;
+  double projectile_x0 = target_x0 - std::cos(std::asin(impact_parameter/(target_radius+projectile_radius)))*(target_radius+projectile_radius);
+  double projectile_y0 = impact_parameter;
   
   initial_kinvec1.set_params(target_x0,target_y0,0,0); // target initial params (target as 0 velocity)
   initial_kinvec2.set_params(projectile_x0,projectile_y0,projectile_vx0,0.0); // projectile initial params (initial vy is 0)
