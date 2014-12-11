@@ -155,6 +155,11 @@ int main(int argc, char *argv[])
     sep_vector.push_back(separation);
     time_vector.push_back(delta_t*i);
     Fmag_vector.push_back(Fmag);   
+
+    if(1==0){
+	std::cerr << "The last change in position was XXXX % of the target radius, run again with a better timestep!!!!" << std::endl;
+	}
+
      
     i++;
   } while ( separation <= ( projectile_radius + target_radius ) ) ;
