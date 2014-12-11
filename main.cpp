@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     ("spring,k", po::value<double>()->default_value(100.0),"spring constant")
     ("eta,e",    po::value<double>()->default_value(0.000),"energy disipation")
     ("lambda,l", po::value<double>()->default_value(1.000),"power law")
-    ("case,c", po::value<int>()->default_value(0),"case selection\n0  defaults\n1  hard k, off center\n2  hard k, on center\n3  soft k, off center\n4  soft k, on center\n5  hard k, equal balls, on center");
+    ("case,c",   po::value<int>()->default_value(0),"case selection\n0  defaults\n1  hard k, off center\n2  hard k, on center\n3  soft k, off center\n4  soft k, on center\n5  hard k, equal balls, on center");
 
   po::variables_map vm;
   po::store(po::parse_command_line(argc,argv,desc),vm);
@@ -54,27 +54,24 @@ int main(int argc, char *argv[])
   
   double target_mass       = vm["t-mass"].as<double>();
   double target_radius     = vm["t-radius"].as<double>();
-  double target_x0         = 1.00; // initial x position of the target
-  double target_y0         = 0.00; // initial y position of the target
-  
-  double impact_parameter   = vm["impact"].as<double>();
+  double target_x0         = 1.00;                                    // initial x position of the target
+  double target_y0         = 0.00;                                    // initial y position of the target
+  double impact_parameter  = vm["impact"].as<double>();               // self explanatory
+  double K                 = vm["spring"].as<double>();               // spring constant
+  double Lambda            = vm["lambda"].as<double>();               // force power law
+  double eta               = vm["eta"].as<double>();                  // energy disapation parameter (0 = none) (fraction loss/time step)
+  double my_case           = vm["case"].as<int>();                    // case selection
 
-  double K      = vm["spring"].as<double>();               // spring constant
-  double Lambda = vm["lambda"].as<double>();               // force power law
-  double eta    = vm["eta"].as<double>();                  // energy disapation parameter (0 = none) (fraction loss/time step)
-  
-  double my_case      = vm["case"].as<int>();           // case selection
-
-  if(my_case != 0){
-    if(my_case == 1)
+  if ( my_case != 0 ) {
+    if ( my_case == 1 )
       K = 100.0, impact_parameter = (2/3)*target_radius;
-    if(my_case == 2)
+    if ( my_case == 2 )
       K = 100.0, impact_parameter = 0;
-    if(my_case == 3)
+    if ( my_case == 3 )
       K = 10.0,  impact_parameter = (2/3)*target_radius;
-    if(my_case == 4)
+    if ( my_case == 4 )
       K = 10.0,  impact_parameter = 0;
-    if(my_case == 5)
+    if ( my_case == 5 )
       K = 1000.0, target_radius = 1.00, projectile_radius = 1.00, target_mass = 5.00, projectile_mass = 5.00, impact_parameter = 0.00;
     else
       std::cout << "case parameter out of bounds, using defaults" << std::endl;
@@ -108,10 +105,12 @@ int main(int argc, char *argv[])
   std::vector<double> projectile_KE_vector;
   std::vector<double> total_KE_vector;
   std::vector<double> PE_vector;
+  std::vector<double> Etot_vector;
   PE_vector.push_back(0.0);
   projectile_KE_vector.push_back(0.5*projectile_mass*projectile_vx0*projectile_vx0);
   target_KE_vector.push_back(0.0);
   total_KE_vector.push_back(projectile_KE_vector.at(0)+target_KE_vector.at(0));
+  Etot_vector.push_back(PE_vector.at(0)+total_KE_vector.at(0));
   CM_x_vector.push_back((initial_kinvec1.x()*target_mass + initial_kinvec2.x()*projectile_mass)/(projectile_mass+target_mass));
   CM_y_vector.push_back((initial_kinvec1.y()*target_mass + initial_kinvec2.y()*projectile_mass)/(projectile_mass+target_mass));
   CM_vx_vector.push_back((initial_kinvec1.vx()*target_mass + initial_kinvec2.vx()*projectile_mass)/(projectile_mass+target_mass));
@@ -173,8 +172,10 @@ int main(int argc, char *argv[])
     projectile_KE_vector.push_back(current_KE_2);
     total_KE_vector.push_back(current_KE_1+current_KE_2);
 
-    double current_PE = K*std::pow(separation,Lambda+1)/Lambda;
+    double current_PE = K*std::pow(std::fabs((target_radius+projectile_radius)-separation),Lambda+1)/Lambda;
     PE_vector.push_back(current_PE);
+
+    Etot_vector.push_back(current_PE+current_KE_1+current_KE_2);
     
     // __ center of mass
     CM_x_vector.push_back((p1.kinvecs().at(i-1).x()*target_mass + p2.kinvecs().at(i-1).x()*projectile_mass)/(projectile_mass+target_mass));
@@ -189,21 +190,20 @@ int main(int argc, char *argv[])
     //    std::cout << separation << " " << projectile_radius + target_radius << std::endl;
     sep_vector.push_back(separation);
     time_vector.push_back(delta_t*i);
-    Fmag_vector.push_back(Fmag);   
+    Fmag_vector.push_back(Fmag);
 
     // Give an error if it is moving to much in one timestep
     double frac_Dx_target     = (std::pow(p1.kinvecs().at(i).x()-p1.kinvecs().at(i-1).x(),2)+std::pow(p1.kinvecs().at(i).y()-p1.kinvecs().at(i-1).y(),2))/(target_radius*target_radius);
     double frac_Dx_projectile = (std::pow(p2.kinvecs().at(i).x()-p2.kinvecs().at(i-1).x(),2)+std::pow(p2.kinvecs().at(i).y()-p2.kinvecs().at(i-1).y(),2))/(projectile_radius*projectile_radius);
 
-    if(frac_Dx_target >= max_frac_Dx){
+    if ( frac_Dx_target >= max_frac_Dx ) {
       std::cerr << "The last change in the target's position was "<< frac_Dx_target <<"*(target radius), run again with a better timestep!!!!" << std::endl;
     }
 
-    if(frac_Dx_projectile >= max_frac_Dx){
+    if ( frac_Dx_projectile >= max_frac_Dx ) {
       std::cerr << "The last change in the projectile's position was "<< frac_Dx_projectile <<"*(projectile radius), run again with a better timestep!!!!" << std::endl;
     }
-
-     
+    
     i++;
   } while ( separation <= ( projectile_radius + target_radius ) ) ;
 
@@ -459,26 +459,31 @@ int main(int argc, char *argv[])
   // Energy Graph
 
   TCanvas *c7 = new TCanvas("c7","",600,600);
+
   TGraph *PE_tg  = new TGraph(PE_vector.size(),&time_vector[0],&PE_vector[0]);
   TGraph *KE_p1  = new TGraph(target_KE_vector.size(),&time_vector[0],&target_KE_vector[0]);
   TGraph *KE_p2  = new TGraph(projectile_KE_vector.size(),&time_vector[0],&projectile_KE_vector[0]);
   TGraph *KE_tot = new TGraph(total_KE_vector.size(),&time_vector[0],&total_KE_vector[0]);
-
+  TGraph *E_tot  = new TGraph(Etot_vector.size(),&time_vector[0],&Etot_vector[0]);
+  
   PE_tg->SetMarkerStyle(7);
   KE_p1->SetMarkerStyle(7);
   KE_p2->SetMarkerStyle(7);
   KE_tot->SetMarkerStyle(7);
-
+  E_tot->SetMarkerStyle(7);
+  
   PE_tg->SetMarkerColor(kMagenta);
   KE_p1->SetMarkerColor(kBlack);
   KE_p2->SetMarkerColor(kBlue);
   KE_tot->SetMarkerColor(kGreen);
+  E_tot->SetMarkerColor(kCyan);
   
   TMultiGraph *mgKE = new TMultiGraph();
   mgKE->Add(PE_tg);
   mgKE->Add(KE_p1);
   mgKE->Add(KE_p2);
   mgKE->Add(KE_tot);
+  mgKE->Add(E_tot);
   mgKE->Draw("AP");
 
   mgKE->GetXaxis()->SetTitle("t");
@@ -489,6 +494,7 @@ int main(int argc, char *argv[])
   mgKEleg->AddEntry(KE_p2,"KE Projectile","p");
   mgKEleg->AddEntry(KE_p1,"KE Target","p");
   mgKEleg->AddEntry(KE_tot,"KE Total","p");
+  mgKEleg->AddEntry(E_tot,"Total Energy","p");
   mgKEleg->Draw("same");
 
   gPad->Modified();
