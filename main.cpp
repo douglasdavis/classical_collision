@@ -15,8 +15,16 @@
 #include "TLegend.h"
 #include "TLatex.h"
 #include "TEllipse.h"
+#include "TStyle.h"
+#include "TPaveStats.h"
 
 #include "boost/program_options.hpp"
+
+Double_t flat_fit(Double_t *v, Double_t *par)
+{
+  return par[0];
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -172,7 +180,7 @@ int main(int argc, char *argv[])
     projectile_KE_vector.push_back(current_KE_2);
     total_KE_vector.push_back(current_KE_1+current_KE_2);
 
-    double current_PE = K*std::pow(std::fabs((target_radius+projectile_radius)-separation),Lambda+1)/Lambda;
+    double current_PE = K*std::pow(std::fabs((target_radius+projectile_radius)-separation),Lambda+1)/(Lambda+1);
     PE_vector.push_back(current_PE);
 
     Etot_vector.push_back(current_PE+current_KE_1+current_KE_2);
@@ -457,8 +465,8 @@ int main(int argc, char *argv[])
 
 
   // Energy Graph
-
-  TCanvas *c7 = new TCanvas("c7","",600,600);
+  TCanvas *c7 = new TCanvas("c7","",800,600);
+  gPad->SetRightMargin(.20);
 
   TGraph *PE_tg  = new TGraph(PE_vector.size(),&time_vector[0],&PE_vector[0]);
   TGraph *KE_p1  = new TGraph(target_KE_vector.size(),&time_vector[0],&target_KE_vector[0]);
@@ -478,27 +486,47 @@ int main(int argc, char *argv[])
   KE_tot->SetMarkerColor(kGreen);
   E_tot->SetMarkerColor(kCyan);
   
-  TMultiGraph *mgKE = new TMultiGraph();
-  mgKE->Add(PE_tg);
-  mgKE->Add(KE_p1);
-  mgKE->Add(KE_p2);
-  mgKE->Add(KE_tot);
-  mgKE->Add(E_tot);
-  mgKE->Draw("AP");
+  TMultiGraph *mgE = new TMultiGraph();
+  mgE->Add(PE_tg);
+  mgE->Add(KE_p1);
+  mgE->Add(KE_p2);
+  mgE->Add(KE_tot);
+  mgE->Add(E_tot);
+  mgE->Draw("AP");
 
-  mgKE->GetXaxis()->SetTitle("t");
-  mgKE->GetYaxis()->SetTitle("Energy");
+  mgE->SetTitle("E vs t");
+  mgE->GetXaxis()->SetTitle("t");
+  mgE->GetYaxis()->SetTitle("Energy");
 
-  TLegend* mgKEleg = new TLegend(0.73,0.5-0.075,0.98,0.5+0.075);
-  mgKEleg->AddEntry(PE_tg,"Potential","p");
-  mgKEleg->AddEntry(KE_p2,"KE Projectile","p");
-  mgKEleg->AddEntry(KE_p1,"KE Target","p");
-  mgKEleg->AddEntry(KE_tot,"KE Total","p");
-  mgKEleg->AddEntry(E_tot,"Total Energy","p");
-  mgKEleg->Draw("same");
+  TF1* flat_fit_func = new TF1("fit",flat_fit,mgE->GetXaxis()->GetXmin(),mgE->GetXaxis()->GetXmax(),1);
+  flat_fit_func->SetParNames("E_{ave}");
+  flat_fit_func->SetLineColor(kBlack);
 
+  E_tot->Fit("fit","q"); // Don't print stats so we can pipe the output nicely
+
+  TLegend* mgEleg = new TLegend(0.82,0.5,0.98,0.5+0.15);
+  mgEleg->AddEntry(PE_tg,"Potential","p");
+  mgEleg->AddEntry(KE_p2,"Projectile KE","p");
+  mgEleg->AddEntry(KE_p1,"Target KE","p");
+  mgEleg->AddEntry(KE_tot,"Total KE","p");
+  mgEleg->AddEntry(E_tot,"Total Energy","p");
+  mgEleg->AddEntry(flat_fit_func,"Average Energy","l");
+  mgEleg->Draw("same");
+
+  gStyle->SetOptStat(110110);
+  gStyle->SetOptFit();
+
+  gPad->Update();
+
+  TPaveStats *mgE_st = (TPaveStats*)E_tot->FindObject("stats");
+  mgE_st->SetX1NDC(0.82);
+  mgE_st->SetX2NDC(0.98);
+  mgE_st->SetY1NDC(0.45);
+  mgE_st->SetY2NDC(0.5);
+
+  gPad->Update();
   gPad->Modified();
-  c7->Print("out/KE_vs_t.pdf","Portrait pdf");
+  c7->Print("out/E_vs_t.pdf","Portrait pdf");
   
   return 0;
 }
