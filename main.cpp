@@ -157,7 +157,6 @@ int main(int argc, char *argv[])
 
 */
 
-
   // Seperation vs time graph
   TCanvas* c1 = new TCanvas("c1"," ",400,350);
   
@@ -169,6 +168,7 @@ int main(int argc, char *argv[])
   sep_graph->SetTitle("Radial Seperation vs Time");
 
   c1->Print("out/sep_vs_t.pdf", "Portrait pdf");
+
 
 
   // x vs y graph
@@ -212,6 +212,8 @@ int main(int argc, char *argv[])
   gPad->Modified();
   c2->Print("out/x_vs_y.pdf", "Portrait pdf");
 
+
+
   // vx vs vy graph
   TCanvas* c3 = new TCanvas("c3"," ",400,350);
 
@@ -254,6 +256,88 @@ int main(int argc, char *argv[])
   c3->Print("out/vx_vs_vy.pdf", "Portrait pdf");
 
 
+
+  // vx vs t graph
+  TCanvas* c4 = new TCanvas("c4"," ",400,350);
+
+  TGraph *vx1 = new TGraph();
+  vx1->SetName("Target");
+  TGraph *vx2 = new TGraph();
+  vx2->SetName("Projectile");
+  TGraph *CM_vx_graph = new TGraph(CM_vx_vector.size(),&time_vector[0],&CM_vx_vector[0]);
+  CM_vx_graph->SetName("Center of Mass");
+
+  for ( auto j = 0; j < p1.kinvecs().size(); ++j ) {
+    vx1->SetPoint(j,time_vector.at(j),p1.kinvecs().at(j).vx());
+    vx2->SetPoint(j,time_vector.at(j),p2.kinvecs().at(j).vx());
+  }
+ 
+  TMultiGraph *mgvx = new TMultiGraph();
+  vx1->SetMarkerStyle(7);
+  vx1->SetMarkerColor(kBlack);
+  vx2->SetMarkerStyle(7);
+  vx2->SetMarkerColor(kBlue);
+  CM_vx_graph->SetMarkerStyle(7);
+  CM_vx_graph->SetMarkerColor(kGreen);
+  mgvx->Add(vx1);
+  mgvx->Add(vx2);
+  mgvx->Add(CM_vx_graph);
+  mgvx->Draw("AP");
+
+  mgvx->SetTitle("X Velocities vs t");
+  mgvx->GetXaxis()->SetTitle("t");
+  mgvx->GetYaxis()->SetTitle("v_{x}");
+
+  TLegend* mgvxleg = new TLegend(0.7,0.5-0.075,0.95,0.5+0.075);
+  mgvxleg->AddEntry(vx2,"Projectile","p");
+  mgvxleg->AddEntry(vx1,"Target","p");
+  mgvxleg->AddEntry(CM_vx_graph,"Center of Mass","p");
+  mgvxleg->Draw();
+
+  gPad->Modified();
+  c4->Print("out/vx_vs_t.pdf", "Portrait pdf");
+
+
+
+  // vy vs t graph
+  TCanvas* c5 = new TCanvas("c5"," ",400,350);
+
+  TGraph *vy1 = new TGraph();
+  vy1->SetName("Target");
+  TGraph *vy2 = new TGraph();
+  vy2->SetName("Projectile");
+  TGraph *CM_vy_graph = new TGraph(CM_vy_vector.size(),&time_vector[0],&CM_vy_vector[0]);
+  CM_vy_graph->SetName("Center of Mass");
+
+  for ( auto j = 0; j < p1.kinvecs().size(); ++j ) {
+    vy1->SetPoint(j,time_vector.at(j),p1.kinvecs().at(j).vy());
+    vy2->SetPoint(j,time_vector.at(j),p2.kinvecs().at(j).vy());
+  }
+ 
+  TMultiGraph *mgvy = new TMultiGraph();
+  vy1->SetMarkerStyle(7);
+  vy1->SetMarkerColor(kBlack);
+  vy2->SetMarkerStyle(7);
+  vy2->SetMarkerColor(kBlue);
+  CM_vy_graph->SetMarkerStyle(7);
+  CM_vy_graph->SetMarkerColor(kGreen);
+  mgvy->Add(vy1);
+  mgvy->Add(vy2);
+  mgvy->Add(CM_vy_graph);
+  mgvy->Draw("AP");
+
+  mgvy->SetTitle("X Velocities vs t");
+  mgvy->GetXaxis()->SetTitle("t");
+  mgvy->GetYaxis()->SetTitle("v_{y}");
+
+  TLegend* mgvyleg = new TLegend(0.7,0.5-0.075,0.95,0.5+0.075);
+  mgvyleg->AddEntry(vy2,"Projectile","p");
+  mgvyleg->AddEntry(vy1,"Target","p");
+  mgvyleg->AddEntry(CM_vy_graph,"Center of Mass","p");
+  mgvyleg->Draw();
+
+  gPad->Modified();
+  c5->Print("out/vy_vs_t.pdf", "Portrait pdf");
 
 
 
