@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
   }
     
   double delta_t           = vm["delta-t"].as<double>();
+  double max_frac_Dx	   = 0.01; // Largest allowed change in position per timestep
 
   double projectile_mass   = vm["p-mass"].as<double>();
   double projectile_radius = vm["p-radius"].as<double>();
@@ -156,9 +157,17 @@ int main(int argc, char *argv[])
     time_vector.push_back(delta_t*i);
     Fmag_vector.push_back(Fmag);   
 
-    if(1==0){
-	std::cerr << "The last change in position was XXXX % of the target radius, run again with a better timestep!!!!" << std::endl;
+    // Give an error if it is moving to much in one timestep
+    double frac_Dx_target     = (std::pow(p1.kinvecs().at(i).x()-p1.kinvecs().at(i-1).x(),2)+std::pow(p1.kinvecs().at(i).y()-p1.kinvecs().at(i-1).y(),2))/(target_radius*target_radius);
+    double frac_Dx_projectile = (std::pow(p2.kinvecs().at(i).x()-p2.kinvecs().at(i-1).x(),2)+std::pow(p2.kinvecs().at(i).y()-p2.kinvecs().at(i-1).y(),2))/(projectile_radius*projectile_radius);
+
+    if(frac_Dx_target >= max_frac_Dx){
+	std::cerr << "The last change in the target's position was "<< frac_Dx_target <<"*(target radius), run again with a better timestep!!!!" << std::endl;
 	}
+
+    if(frac_Dx_projectile >= max_frac_Dx){
+        std::cerr << "The last change in the projectile's position was "<< frac_Dx_projectile <<"*(projectile radius), run again with a better timestep!!!!" << std::endl;
+        }
 
      
     i++;
