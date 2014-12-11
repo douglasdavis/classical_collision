@@ -161,8 +161,8 @@ int main(int argc, char *argv[])
 
   TEllipse *min_sep_ellipse1 = new TEllipse(p1.kinvecs().at(min_sep_i).x(),p1.kinvecs().at(min_sep_i).y(),target_radius,target_radius);
   TEllipse *min_sep_ellipse2 = new TEllipse(p2.kinvecs().at(min_sep_i).x(),p1.kinvecs().at(min_sep_i).y(),projectile_radius,projectile_radius);
-  TEllipse *end_ellpise1     = new TEllipse(p1.kinvecs().at(p1.kinvecs().size()-1).x(),p1.kinvecs().at(p1.kinvecs().size()-1).y(),target_radius,target_radius);
-  TEllipse *end_ellpise2     = new TEllipse(p2.kinvecs().at(p2.kinvecs().size()-1).x(),p2.kinvecs().at(p2.kinvecs().size()-1).y(),projectile_radius,projectile_radius);
+  TEllipse *end_ellipse1     = new TEllipse(p1.kinvecs().at(p1.kinvecs().size()-1).x(),p1.kinvecs().at(p1.kinvecs().size()-1).y(),target_radius,target_radius);
+  TEllipse *end_ellipse2     = new TEllipse(p2.kinvecs().at(p2.kinvecs().size()-1).x(),p2.kinvecs().at(p2.kinvecs().size()-1).y(),projectile_radius,projectile_radius);
   
   
 /*
@@ -228,6 +228,12 @@ int main(int argc, char *argv[])
   mgxyleg->AddEntry(CM_xy_graph,"Center of Mass","p");
   mgxyleg->Draw();
 
+  end_ellipse1->SetFillColor(0);
+  end_ellipse2->SetFillColor(0);
+  end_ellipse1->Draw("same");
+  end_ellipse2->Draw("same");
+  
+  
   gPad->Modified();
   c2->Print("out/x_vs_y.pdf", "Portrait pdf");
 
