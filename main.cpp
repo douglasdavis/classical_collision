@@ -67,19 +67,19 @@ int main(int argc, char *argv[])
 
   if(my_case != 0){
     if(my_case == 1)
-	K = 100.0, impact_parameter = (2/3)*target_radius;
+      K = 100.0, impact_parameter = (2/3)*target_radius;
     if(my_case == 2)
-        K = 100.0, impact_parameter = 0;
+      K = 100.0, impact_parameter = 0;
     if(my_case == 3)
-        K = 10.0,  impact_parameter = (2/3)*target_radius;
+      K = 10.0,  impact_parameter = (2/3)*target_radius;
     if(my_case == 4)
-        K = 10.0,  impact_parameter = 0;
+      K = 10.0,  impact_parameter = 0;
     if(my_case == 5)
-        K = 1000.0, target_radius = 1.00, projectile_radius = 1.00, target_mass = 5.00, projectile_mass = 5.00, impact_parameter = 0.00;
-    }
-    else{
-	std::cout << "case parameter out of bounds, using defaults" << std::endl;
-    }
+      K = 1000.0, target_radius = 1.00, projectile_radius = 1.00, target_mass = 5.00, projectile_mass = 5.00, impact_parameter = 0.00;
+  }
+  else{
+    std::cout << "case parameter out of bounds, using defaults" << std::endl;
+  }
 
   particle p1(target_mass,target_radius);
   particle p2(projectile_mass,projectile_radius);
@@ -108,6 +108,8 @@ int main(int argc, char *argv[])
   std::vector<double> target_KE_vector;
   std::vector<double> projectile_KE_vector;
   std::vector<double> total_KE_vector;
+  std::vector<double> PE_vector;
+  PE_vector.push_back(0.0);
   projectile_KE_vector.push_back(0.5*projectile_mass*projectile_vx0*projectile_vx0);
   target_KE_vector.push_back(0.0);
   total_KE_vector.push_back(projectile_KE_vector.at(0)+target_KE_vector.at(0));
@@ -166,12 +168,15 @@ int main(int argc, char *argv[])
     new_kv2.set_vx((1-eta)*p2.kinvecs().at(i-1).vx() + Fmag*Fx*delta_t/projectile_mass);
     new_kv2.set_vy((1-eta)*p2.kinvecs().at(i-1).vy() + Fmag*Fy*delta_t/projectile_mass);
 
-    auto current_KE_1 = .5*target_mass*(std::pow(new_kv1.vx(),2) + std::pow(new_kv1.vy(),2));
-    auto current_KE_2 = .5*projectile_mass*(std::pow(new_kv2.vx(),2) + std::pow(new_kv2.vy(),2));
+    double current_KE_1 = .5*target_mass*(std::pow(new_kv1.vx(),2) + std::pow(new_kv1.vy(),2));
+    double current_KE_2 = .5*projectile_mass*(std::pow(new_kv2.vx(),2) + std::pow(new_kv2.vy(),2));
     target_KE_vector.push_back(current_KE_1);
     projectile_KE_vector.push_back(current_KE_2);
     total_KE_vector.push_back(current_KE_1+current_KE_2);
 
+    double current_PE = K*std::pow(separation,Lambda+1)/Lambda;
+    PE_vector.push_back(current_PE);
+    
     // __ center of mass
     CM_x_vector.push_back((p1.kinvecs().at(i-1).x()*target_mass + p2.kinvecs().at(i-1).x()*projectile_mass)/(projectile_mass+target_mass));
     CM_y_vector.push_back((p1.kinvecs().at(i-1).y()*target_mass + p2.kinvecs().at(i-1).y()*projectile_mass)/(projectile_mass+target_mass));
@@ -192,12 +197,12 @@ int main(int argc, char *argv[])
     double frac_Dx_projectile = (std::pow(p2.kinvecs().at(i).x()-p2.kinvecs().at(i-1).x(),2)+std::pow(p2.kinvecs().at(i).y()-p2.kinvecs().at(i-1).y(),2))/(projectile_radius*projectile_radius);
 
     if(frac_Dx_target >= max_frac_Dx){
-	std::cerr << "The last change in the target's position was "<< frac_Dx_target <<"*(target radius), run again with a better timestep!!!!" << std::endl;
-	}
+      std::cerr << "The last change in the target's position was "<< frac_Dx_target <<"*(target radius), run again with a better timestep!!!!" << std::endl;
+    }
 
     if(frac_Dx_projectile >= max_frac_Dx){
-        std::cerr << "The last change in the projectile's position was "<< frac_Dx_projectile <<"*(projectile radius), run again with a better timestep!!!!" << std::endl;
-        }
+      std::cerr << "The last change in the projectile's position was "<< frac_Dx_projectile <<"*(projectile radius), run again with a better timestep!!!!" << std::endl;
+    }
 
      
     i++;
@@ -220,9 +225,6 @@ int main(int argc, char *argv[])
     for ( auto const& step : p1.kinvecs() ) {
     std::cout << " * " << step.x() << " \t * " << step.y() << " \t * " << step.vx() << " \t * " << step.vy() << " \t * " << std::endl;
     }
-
-    TApplication tapp("tapp",&argc,argv);
-
   */
 
   // Seperation vs time graph
@@ -454,6 +456,40 @@ int main(int argc, char *argv[])
 
   c6->Print("out/Fmag_vs_t.pdf", "Portrait pdf");
 
-  //  tapp.Run();
+
+  TCanvas *c7 = new TCanvas("c7","",600,600);
+  TGraph *PE_tg  = new TGraph(PE_vector.size(),&time_vector[0],&PE_vector[0]);
+  TGraph *KE_p1  = new TGraph(target_KE_vector.size(),&time_vector[0],&target_KE_vector[0]);
+  TGraph *KE_p2  = new TGraph(projectile_KE_vector.size(),&time_vector[0],&projectile_KE_vector[0]);
+  TGraph *KE_tot = new TGraph(total_KE_vector.size(),&time_vector[0],&total_KE_vector[0]);
+
+  PE_tg->SetMarkerColor(7);
+  KE_p1->SetMarkerStyle(7);
+  KE_p2->SetMarkerStyle(7);
+  KE_tot->SetMarkerStyle(7);
+
+  PE_tg->SetMarkerColor(kMagenta);
+  KE_p1->SetMarkerColor(kBlack);
+  KE_p2->SetMarkerColor(kBlue);
+  KE_tot->SetMarkerColor(kGreen);
+  
+  TMultiGraph *mgKE = new TMultiGraph();
+  mgKE->Add(PE_tg);
+  mgKE->Add(KE_p1);
+  mgKE->Add(KE_p2);
+  mgKE->Add(KE_tot);
+
+  TLegend* mgKEleg = new TLegend(0.73,0.5-0.075,0.98,0.5+0.075);
+  mgKEleg->AddEntry(PE_tg,"Potential","p");
+  mgKEleg->AddEntry(KE_p2,"KE Projectile","p");
+  mgKEleg->AddEntry(KE_p1,"KE Target","p");
+  mgKEleg->AddEntry(KE_tot,"KE Total","p");
+  mgKE->Draw("AP");
+  mgKE->GetXaxis()->SetTitle("t");
+  mgKE->GetYaxis()->SetTitle("Energy");
+  mgKEleg->Draw("same");
+  gPad->Modified();
+  c7->Print("out/KE_vs_t.pdf","Portrait pdf");
+  
   return 0;
 }
