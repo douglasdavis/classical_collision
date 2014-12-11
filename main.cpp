@@ -25,7 +25,8 @@ Double_t flat_fit(Double_t *v, Double_t *par)
   return par[0];
 }
 
-void print_single_stat(double tm, double tr, double pm, double pr, double dt, double pvx0, double ip, double k, double eta, double L, double ms, double fvxt, double fvyt, double fvt, double fvxp, double fvyp, double fvp)
+void print_single_stat(double tm, double tr, double pm, double pr, double dt, double pvx0, double tvx0,
+		       double ip, double k, double eta, double L, double ms, double fvxt, double fvyt, double fvt, double fvxp, double fvyp, double fvp)
 {
   std::cout << tm   << "\t"
 	    << tr   << "\t"
@@ -33,6 +34,7 @@ void print_single_stat(double tm, double tr, double pm, double pr, double dt, do
 	    << pr   << "\t"
 	    << dt   << "\t"
 	    << pvx0 << "\t"
+	    << tvx0 << "\t"
 	    << ip   << "\t"
 	    << k    << "\t"
 	    << eta  << "\t"
@@ -58,6 +60,7 @@ int main(int argc, char *argv[])
     ("p-mass",   po::value<double>()->default_value(1.000),"projectile mass")
     ("t-mass",   po::value<double>()->default_value(5.000),"target mass")
     ("p-vinit",  po::value<double>()->default_value(5.000),"projectile initial velocity")
+    ("t-vinit",  po::value<double>()->default_value(0.000),"target initial velocity")
     ("delta-t,t",po::value<double>()->default_value(0.001),"time step")
     ("impact,s", po::value<double>()->default_value(2.000),"impact parameter")
     ("spring,k", po::value<double>()->default_value(100.0),"spring constant")
@@ -83,8 +86,10 @@ int main(int argc, char *argv[])
   
   double target_mass       = vm["t-mass"].as<double>();
   double target_radius     = vm["t-radius"].as<double>();
+  double target_vx0        = vm["t-vinit"].as<double>();              // initial velocity of target
   double target_x0         = 1.00;                                    // initial x position of the target
-  double target_y0         = 0.00;                                    // initial y position of the target
+  double target_y0         = 0.00;                                    // initial y position of the target_x0
+  
   double impact_parameter  = vm["impact"].as<double>();               // self explanatory
   double K                 = vm["spring"].as<double>();               // spring constant
   double Lambda            = vm["lambda"].as<double>();               // force power law
@@ -117,7 +122,7 @@ int main(int argc, char *argv[])
   double projectile_x0 = target_x0 - std::cos(std::asin(impact_parameter/(target_radius+projectile_radius)))*(target_radius+projectile_radius);
   double projectile_y0 = impact_parameter;
   
-  initial_kinvec1.set_params(target_x0,target_y0,0,0); // target initial params (target as 0 velocity)
+  initial_kinvec1.set_params(target_x0,target_y0,target_vx0,0); // target initial params (target as 0 velocity)
   initial_kinvec2.set_params(projectile_x0,projectile_y0,projectile_vx0,0.0); // projectile initial params (initial vy is 0)
 
   p1.add_step(initial_kinvec1);
@@ -456,7 +461,7 @@ int main(int argc, char *argv[])
   mgvy->Add(CM_vy_graph);
   mgvy->Draw("AP");
 
-  mgvy->SetTitle("X Velocities vs t");
+  mgvy->SetTitle("Y Velocities vs t");
   mgvy->GetXaxis()->SetTitle("t");
   mgvy->GetYaxis()->SetTitle("v_{y}");
 
@@ -550,10 +555,8 @@ int main(int argc, char *argv[])
   gPad->Modified();
   c7->Print("out/E_vs_t.pdf","Portrait pdf");
 
-  // void print_single_stat(double tm, double tr, double pm, double pr, double dt, double pvx0, double ip, double k, double eta, double L, double ms, double fvxt, double fvyt, double fvt, double fvxp, double fvyp, double fvp)
-
   print_single_stat(target_mass, target_radius, projectile_mass, projectile_radius,
-		    delta_t, projectile_vx0, impact_parameter, K, eta, Lambda, min_sep,
+		    delta_t, projectile_vx0, target_vx0, impact_parameter, K, eta, Lambda, min_sep,
 		    p1.kinvecs().at(p1.kinvecs().size()-1).vx(),p1.kinvecs().at(p1.kinvecs().size()-1).vy(),
 		    std::sqrt(std::pow(p1.kinvecs().at(p1.kinvecs().size()-1).vx(),2)+std::pow(p1.kinvecs().at(p1.kinvecs().size()-1).vy(),2)),
 		    p2.kinvecs().at(p2.kinvecs().size()-1).vx(),p2.kinvecs().at(p2.kinvecs().size()-1).vy(),

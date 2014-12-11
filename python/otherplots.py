@@ -5,7 +5,7 @@ import numpy as np
 import sys
 
 data = np.loadtxt(sys.argv[1])
-tm, tr, pm, pr, dt, pvx0, ip, k, eta, L, ms, fvxt, fvyt, fvt, fvxp, fvyp, fvp = data.T
+tm, tr, pm, pr, dt, pvx0, tvx0, ip, k, eta, L, ms, fvxt, fvyt, fvt, fvxp, fvyp, fvp = data.T
 
 print ms
 print eta
