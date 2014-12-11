@@ -464,7 +464,7 @@ int main(int argc, char *argv[])
   TGraph *KE_p2  = new TGraph(projectile_KE_vector.size(),&time_vector[0],&projectile_KE_vector[0]);
   TGraph *KE_tot = new TGraph(total_KE_vector.size(),&time_vector[0],&total_KE_vector[0]);
 
-  PE_tg->SetMarkerColor(7);
+  PE_tg->SetMarkerStyle(7);
   KE_p1->SetMarkerStyle(7);
   KE_p2->SetMarkerStyle(7);
   KE_tot->SetMarkerStyle(7);
