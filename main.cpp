@@ -28,11 +28,11 @@ int main(int argc, char *argv[])
     ("p-mass",   po::value<double>()->default_value(1.000),"projectile mass")
     ("t-mass",   po::value<double>()->default_value(5.000),"target mass")
     ("p-vinit",  po::value<double>()->default_value(5.000),"projectile initial velocity")
-    ("delta-t,t",  po::value<double>()->default_value(0.001),"time step")
+    ("delta-t,t",po::value<double>()->default_value(0.001),"time step")
     ("impact,s", po::value<double>()->default_value(1.000),"impact parameter")
     ("spring,k", po::value<double>()->default_value(1.000),"spring constant")
-    ("eta,e",     po::value<double>()->default_value(0.000),"energy disipation")
-    ("lambda,l",   po::value<double>()->default_value(1.000),"power law");
+    ("eta,e",    po::value<double>()->default_value(0.000),"energy disipation")
+    ("lambda,l", po::value<double>()->default_value(1.000),"power law");
 
   po::variables_map vm;
   po::store(po::parse_command_line(argc,argv,desc),vm);
