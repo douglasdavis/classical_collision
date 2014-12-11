@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
   c2->Print("out/x_vs_y.pdf", "Portrait pdf");
 
   // vx vs vy graph
-  TCanvas* c4 = new TCanvas("c4"," ",400,350);
+  TCanvas* c3 = new TCanvas("c3"," ",400,350);
 
   TGraph *vxy1 = new TGraph();
   vxy1->SetName("Target");
@@ -251,12 +251,15 @@ int main(int argc, char *argv[])
   mgvxyleg->Draw();
 
   gPad->Modified();
-  c4->Print("out/vx_vs_vy.pdf", "Portrait pdf");
+  c3->Print("out/vx_vs_vy.pdf", "Portrait pdf");
+
+
+
 
 
   // Force vs time graph
 
-  TCanvas* c3 = new TCanvas("c3"," ",400,350);
+  TCanvas* c6 = new TCanvas("c6"," ",400,350);
 
   TGraph *Fmag_graph = new TGraph(Fmag_vector.size(),&time_vector[0],&Fmag_vector[0]);
   Fmag_graph->GetXaxis()->SetTitle("t");
@@ -265,7 +268,7 @@ int main(int argc, char *argv[])
   Fmag_graph->Draw("AP");
   Fmag_graph->SetTitle("Force Magnitude vs Time");
 
-  c3->Print("out/Fmag_vs_t.pdf", "Portrait pdf");
+  c6->Print("out/Fmag_vs_t.pdf", "Portrait pdf");
 
 //  tapp.Run();
   return 0;
