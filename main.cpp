@@ -85,6 +85,12 @@ int main(int argc, char *argv[])
   std::vector<double> CM_y_vector;
   std::vector<double> CM_vx_vector;
   std::vector<double> CM_vy_vector;
+  std::vector<double> target_KE_vector;
+  std::vector<double> projectile_KE_vector;
+  std::vector<double> total_KE_vector;
+  projectile_KE_vector.push_back(0.5*projectile_mass*projectile_vx0*projectile_vx0);
+  target_KE_vector.push_back(0.0);
+  total_KE_vector.push_back(projectile_KE_vector.at(0)+target_KE_vector.at(0));
   CM_x_vector.push_back((initial_kinvec1.x()*target_mass + initial_kinvec2.x()*projectile_mass)/(projectile_mass+target_mass));
   CM_y_vector.push_back((initial_kinvec1.y()*target_mass + initial_kinvec2.y()*projectile_mass)/(projectile_mass+target_mass));
   CM_vx_vector.push_back((initial_kinvec1.vx()*target_mass + initial_kinvec2.vx()*projectile_mass)/(projectile_mass+target_mass));
@@ -140,6 +146,11 @@ int main(int argc, char *argv[])
     new_kv2.set_vx((1-eta)*p2.kinvecs().at(i-1).vx() + Fmag*Fx*delta_t/projectile_mass);
     new_kv2.set_vy((1-eta)*p2.kinvecs().at(i-1).vy() + Fmag*Fy*delta_t/projectile_mass);
 
+    auto current_KE_1 = .5*target_mass*(std::pow(new_kv1.vx(),2) + std::pow(new_kv1.vy(),2));
+    auto current_KE_2 = .5*projectile_mass*(std::pow(new_kv2.vx(),2) + std::pow(new_kv2.vy(),2));
+    target_KE_vector.push_back(current_KE_1);
+    projectile_KE_vector.push_back(current_KE_2);
+    total_KE_vector.push_back(current_KE_1+current_KE_2);
 
     // __ center of mass
     CM_x_vector.push_back((p1.kinvecs().at(i-1).x()*target_mass + p2.kinvecs().at(i-1).x()*projectile_mass)/(projectile_mass+target_mass));
