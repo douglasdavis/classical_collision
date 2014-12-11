@@ -183,7 +183,7 @@ int main(int argc, char *argv[])
 
   // Seperation vs time graph
 
-  TCanvas* c1 = new TCanvas("c1"," ",400,350);
+  TCanvas* c1 = new TCanvas("c1"," ",600,600);
   gPad->SetTopMargin(.13);
   gPad->SetBottomMargin(.13);
   gPad->SetRightMargin(.13);
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
   c1->Print("out/sep_vs_t.pdf", "Portrait pdf");
 
   // x vs y graph
-  TCanvas* c2 = new TCanvas("c2"," ",400,350);
+  TCanvas* c2 = new TCanvas("c2"," ",600,600);
 
   TGraph *xy1 = new TGraph();
   xy1->SetName("Target");
@@ -229,6 +229,7 @@ int main(int argc, char *argv[])
   mgxy->SetTitle("Center of Mass Trajectories");
   mgxy->GetXaxis()->SetTitle("x");
   mgxy->GetYaxis()->SetTitle("y");
+  mgxy->GetYaxis()->SetTitleOffset(1.25); // This plot looked bad it without it but not the others for some reason... ?
 
   TLegend* mgxyleg = new TLegend(0.15,0.75,0.4,0.9);
   mgxyleg->AddEntry(xy2,"Projectile","p");
@@ -313,7 +314,7 @@ int main(int argc, char *argv[])
 
 
   // vx vs t graph
-  TCanvas* c4 = new TCanvas("c4"," ",400,350);
+  TCanvas* c4 = new TCanvas("c4"," ",600,600);
 
   TGraph *vx1 = new TGraph();
   vx1->SetName("Target");
@@ -343,7 +344,7 @@ int main(int argc, char *argv[])
   mgvx->GetXaxis()->SetTitle("t");
   mgvx->GetYaxis()->SetTitle("v_{x}");
 
-  TLegend* mgvxleg = new TLegend(0.7,0.5-0.075,0.95,0.5+0.075);
+  TLegend* mgvxleg = new TLegend(0.73,0.5-0.075,0.98,0.5+0.075);
   mgvxleg->AddEntry(vx2,"Projectile","p");
   mgvxleg->AddEntry(vx1,"Target","p");
   mgvxleg->AddEntry(CM_vx_graph,"Center of Mass","p");
@@ -355,7 +356,7 @@ int main(int argc, char *argv[])
 
 
   // vy vs t graph
-  TCanvas* c5 = new TCanvas("c5"," ",400,350);
+  TCanvas* c5 = new TCanvas("c5"," ",600,600);
 
   TGraph *vy1 = new TGraph();
   vy1->SetName("Target");
@@ -385,7 +386,7 @@ int main(int argc, char *argv[])
   mgvy->GetXaxis()->SetTitle("t");
   mgvy->GetYaxis()->SetTitle("v_{y}");
 
-  TLegend* mgvyleg = new TLegend(0.7,0.5-0.075,0.95,0.5+0.075);
+  TLegend* mgvyleg = new TLegend(0.73,0.5-0.075,0.98,0.5+0.075);
   mgvyleg->AddEntry(vy2,"Projectile","p");
   mgvyleg->AddEntry(vy1,"Target","p");
   mgvyleg->AddEntry(CM_vy_graph,"Center of Mass","p");
@@ -398,7 +399,7 @@ int main(int argc, char *argv[])
 
   // Force vs time graph
 
-  TCanvas* c6 = new TCanvas("c6"," ",400,350);
+  TCanvas* c6 = new TCanvas("c6"," ",600,600);
 
   TGraph *Fmag_graph = new TGraph(Fmag_vector.size(),&time_vector[0],&Fmag_vector[0]);
   Fmag_graph->GetXaxis()->SetTitle("t");
