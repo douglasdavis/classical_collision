@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
     p1.add_step(new_kv1);
     p2.add_step(new_kv2);
     
-//    std::cout << separation << " " << projectile_radius + target_radius << std::endl;
+    //    std::cout << separation << " " << projectile_radius + target_radius << std::endl;
     sep_vector.push_back(separation);
     time_vector.push_back(delta_t*i);
     Fmag_vector.push_back(Fmag);   
@@ -160,24 +160,34 @@ int main(int argc, char *argv[])
   } while ( separation <= ( projectile_radius + target_radius ) ) ;
 
   TEllipse *min_sep_ellipse1 = new TEllipse(p1.kinvecs().at(min_sep_i).x(),p1.kinvecs().at(min_sep_i).y(),target_radius,target_radius);
-  TEllipse *min_sep_ellipse2 = new TEllipse(p2.kinvecs().at(min_sep_i).x(),p1.kinvecs().at(min_sep_i).y(),projectile_radius,projectile_radius);
+  TEllipse *min_sep_ellipse2 = new TEllipse(p2.kinvecs().at(min_sep_i).x(),p2.kinvecs().at(min_sep_i).y(),projectile_radius,projectile_radius);
   TEllipse *end_ellipse1     = new TEllipse(p1.kinvecs().at(p1.kinvecs().size()-1).x(),p1.kinvecs().at(p1.kinvecs().size()-1).y(),target_radius,target_radius);
   TEllipse *end_ellipse2     = new TEllipse(p2.kinvecs().at(p2.kinvecs().size()-1).x(),p2.kinvecs().at(p2.kinvecs().size()-1).y(),projectile_radius,projectile_radius);
+  min_sep_ellipse1->SetFillColorAlpha(kWhite,0);
+  min_sep_ellipse2->SetFillColorAlpha(kWhite,0);
+  min_sep_ellipse1->SetLineColor(kBlack);
+  min_sep_ellipse2->SetLineColor(kBlue);
+  end_ellipse1->SetLineColor(kBlack);
+  end_ellipse2->SetLineColor(kBlue);
   
-  
-/*
-  std::cout << " ****\t******\t*****\t******\t** " << std::endl;
-  std::cout << " * x \t * y \t * vx \t * vy \t * " << std::endl;
-  for ( auto const& step : p1.kinvecs() ) {
+  /*
+    std::cout << " ****\t******\t*****\t******\t** " << std::endl;
+    std::cout << " * x \t * y \t * vx \t * vy \t * " << std::endl;
+    for ( auto const& step : p1.kinvecs() ) {
     std::cout << " * " << step.x() << " \t * " << step.y() << " \t * " << step.vx() << " \t * " << step.vy() << " \t * " << std::endl;
-  }
+    }
 
-  TApplication tapp("tapp",&argc,argv);
+    TApplication tapp("tapp",&argc,argv);
 
-*/
+  */
 
   // Seperation vs time graph
+
   TCanvas* c1 = new TCanvas("c1"," ",400,350);
+  gPad->SetTopMargin(.13);
+  gPad->SetBottomMargin(.13);
+  gPad->SetRightMargin(.13);
+  gPad->SetLeftMargin(.13);
   
   TGraph *sep_graph = new TGraph(sep_vector.size(),&time_vector[0],&sep_vector[0]);
   sep_graph->GetXaxis()->SetTitle("t");
@@ -187,8 +197,6 @@ int main(int argc, char *argv[])
   sep_graph->SetTitle("Radial Seperation vs Time");
 
   c1->Print("out/sep_vs_t.pdf", "Portrait pdf");
-
-
 
   // x vs y graph
   TCanvas* c2 = new TCanvas("c2"," ",400,350);
@@ -226,16 +234,38 @@ int main(int argc, char *argv[])
   mgxyleg->AddEntry(xy2,"Projectile","p");
   mgxyleg->AddEntry(xy1,"Target","p");
   mgxyleg->AddEntry(CM_xy_graph,"Center of Mass","p");
-  mgxyleg->Draw();
+  mgxyleg->Draw("same");
+  c2->Print("out/x_vs_y.pdf", "Portrait pdf");
 
-  end_ellipse1->SetFillColor(0);
-  end_ellipse2->SetFillColor(0);
+  TCanvas *c2we = new TCanvas("c2we","c2we",600,600);
+  mgxy->Draw("AP");
+  mgxyleg->Draw("same");
+  end_ellipse1->SetFillColorAlpha(kWhite,0);
+  end_ellipse2->SetFillColorAlpha(kWhite,0);
   end_ellipse1->Draw("same");
   end_ellipse2->Draw("same");
+
   
-  
+  c2we->Modified(); c2we->Update();
+  mgxy->GetXaxis()->SetLimits(-2.2*target_radius,2.2*target_radius);
+  c2we->Modified(); c2we->Update();
+  mgxy->GetYaxis()->SetRangeUser(-2.2*target_radius,2.2*target_radius);
   gPad->Modified();
-  c2->Print("out/x_vs_y.pdf", "Portrait pdf");
+  c2we->Print("out/x_vs_y_with_ellipse.pdf", "Portrait pdf");
+  
+  TCanvas *c2weMS = new TCanvas("c2weMS","c2we",600,600);
+  mgxy->Draw("AP");
+  mgxyleg->Draw("same");
+  min_sep_ellipse1->Draw("same");
+  min_sep_ellipse2->Draw("same");
+
+  
+  c2weMS->Modified(); c2weMS->Update();
+  mgxy->GetXaxis()->SetLimits(-2.2*target_radius,2.2*target_radius);
+  c2weMS->Modified(); c2weMS->Update();
+  mgxy->GetYaxis()->SetRangeUser(-2.2*target_radius,2.2*target_radius);
+  gPad->Modified();
+  c2weMS->Print("out/x_vs_y_with_ellipse_MS.pdf", "Portrait pdf");
 
 
 
@@ -379,6 +409,6 @@ int main(int argc, char *argv[])
 
   c6->Print("out/Fmag_vs_t.pdf", "Portrait pdf");
 
-//  tapp.Run();
+  //  tapp.Run();
   return 0;
 }
