@@ -76,9 +76,8 @@ int main(int argc, char *argv[])
       K = 10.0,  impact_parameter = 0;
     if(my_case == 5)
       K = 1000.0, target_radius = 1.00, projectile_radius = 1.00, target_mass = 5.00, projectile_mass = 5.00, impact_parameter = 0.00;
-  }
-  else{
-    std::cout << "case parameter out of bounds, using defaults" << std::endl;
+    else
+      std::cout << "case parameter out of bounds, using defaults" << std::endl;
   }
 
   particle p1(target_mass,target_radius);
@@ -457,6 +456,8 @@ int main(int argc, char *argv[])
   c6->Print("out/Fmag_vs_t.pdf", "Portrait pdf");
 
 
+  // Energy Graph
+
   TCanvas *c7 = new TCanvas("c7","",600,600);
   TGraph *PE_tg  = new TGraph(PE_vector.size(),&time_vector[0],&PE_vector[0]);
   TGraph *KE_p1  = new TGraph(target_KE_vector.size(),&time_vector[0],&target_KE_vector[0]);
@@ -478,16 +479,18 @@ int main(int argc, char *argv[])
   mgKE->Add(KE_p1);
   mgKE->Add(KE_p2);
   mgKE->Add(KE_tot);
+  mgKE->Draw("AP");
+
+  mgKE->GetXaxis()->SetTitle("t");
+  mgKE->GetYaxis()->SetTitle("Energy");
 
   TLegend* mgKEleg = new TLegend(0.73,0.5-0.075,0.98,0.5+0.075);
   mgKEleg->AddEntry(PE_tg,"Potential","p");
   mgKEleg->AddEntry(KE_p2,"KE Projectile","p");
   mgKEleg->AddEntry(KE_p1,"KE Target","p");
   mgKEleg->AddEntry(KE_tot,"KE Total","p");
-  mgKE->Draw("AP");
-  mgKE->GetXaxis()->SetTitle("t");
-  mgKE->GetYaxis()->SetTitle("Energy");
   mgKEleg->Draw("same");
+
   gPad->Modified();
   c7->Print("out/KE_vs_t.pdf","Portrait pdf");
   
