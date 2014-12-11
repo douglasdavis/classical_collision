@@ -192,8 +192,8 @@ int main(int argc, char *argv[])
     new_kv2.set_x(p2.kinvecs().at(i-1).x() + p2.kinvecs().at(i-1).vx()*delta_t + 0.5*Fmag*Fx*delta_t*delta_t/projectile_mass);
     new_kv2.set_y(p2.kinvecs().at(i-1).y() + p2.kinvecs().at(i-1).vy()*delta_t + 0.5*Fmag*Fy*delta_t*delta_t/projectile_mass);
 
-    new_kv2.set_vx((1-eta)*p2.kinvecs().at(i-1).vx() + Fmag*Fx*delta_t/projectile_mass);
-    new_kv2.set_vy((1-eta)*p2.kinvecs().at(i-1).vy() + Fmag*Fy*delta_t/projectile_mass);
+    new_kv2.set_vx((1.0-eta)*p2.kinvecs().at(i-1).vx() + Fmag*Fx*delta_t/projectile_mass);
+    new_kv2.set_vy((1.0-eta)*p2.kinvecs().at(i-1).vy() + Fmag*Fy*delta_t/projectile_mass);
 
     double current_KE_1 = .5*target_mass*(std::pow(new_kv1.vx(),2) + std::pow(new_kv1.vy(),2));
     double current_KE_2 = .5*projectile_mass*(std::pow(new_kv2.vx(),2) + std::pow(new_kv2.vy(),2));
@@ -522,6 +522,7 @@ int main(int argc, char *argv[])
   TF1* flat_fit_func = new TF1("fit",flat_fit,mgE->GetXaxis()->GetXmin(),mgE->GetXaxis()->GetXmax(),1);
   flat_fit_func->SetParNames("E_{ave}");
   flat_fit_func->SetLineColor(kBlack);
+  flat_fit_func->SetLineStyle(7);
 
   E_tot->Fit("fit","q"); // Don't print stats so we can pipe the output nicely
 
