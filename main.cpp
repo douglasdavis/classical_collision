@@ -25,6 +25,27 @@ Double_t flat_fit(Double_t *v, Double_t *par)
   return par[0];
 }
 
+void print_single_stat(double tm, double tr, double pm, double pr, double dt, double pvx0, double ip, double k, double eta, double L, double ms, double fvxt, double fvyt, double fvt, double fvxp, double fvyp, double fvp)
+{
+  std::cout << tm   << "\t"
+	    << tr   << "\t"
+	    << pm   << "\t"
+	    << pr   << "\t"
+	    << dt   << "\t"
+	    << pvx0 << "\t"
+	    << ip   << "\t"
+	    << k    << "\t"
+	    << eta  << "\t"
+	    << L    << "\t"
+	    << ms   << "\t"
+	    << fvxt << "\t"
+	    << fvyt << "\t"
+	    << fvt  << "\t"
+	    << fvxp << "\t"
+	    << fvyp << "\t"
+	    << fvp  << "\t"
+	    << std::endl;
+}
 
 int main(int argc, char *argv[])
 {
@@ -527,6 +548,15 @@ int main(int argc, char *argv[])
   gPad->Update();
   gPad->Modified();
   c7->Print("out/E_vs_t.pdf","Portrait pdf");
+
+  // void print_single_stat(double tm, double tr, double pm, double pr, double dt, double pvx0, double ip, double k, double eta, double L, double ms, double fvxt, double fvyt, double fvt, double fvxp, double fvyp, double fvp)
+
+  print_single_stat(target_mass, target_radius, projectile_mass, projectile_radius,
+		    delta_t, projectile_vx0, impact_parameter, K, eta, Lambda, min_sep,
+		    p1.kinvecs().at(p1.kinvecs().size()-1).vx(),p1.kinvecs().at(p1.kinvecs().size()-1).vy(),
+		    std::sqrt(std::pow(p1.kinvecs().at(p1.kinvecs().size()-1).vx(),2)+std::pow(p1.kinvecs().at(p1.kinvecs().size()-1).vy(),2)),
+		    p2.kinvecs().at(p2.kinvecs().size()-1).vx(),p2.kinvecs().at(p2.kinvecs().size()-1).vy(),
+		    std::sqrt(std::pow(p2.kinvecs().at(p2.kinvecs().size()-1).vx(),2)+std::pow(p2.kinvecs().at(p2.kinvecs().size()-1).vy(),2)));
   
   return 0;
 }
