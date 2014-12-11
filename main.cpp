@@ -14,6 +14,7 @@
 #include "TAxis.h"
 #include "TLegend.h"
 #include "TLatex.h"
+#include "TEllipse.h"
 
 #include "boost/program_options.hpp"
 
@@ -93,6 +94,12 @@ int main(int argc, char *argv[])
 
   double separation;      // |position1 - position2|
   double Fx, Fy, Fmag;    // force components, magnitude
+
+  // we want to know what the minimum separation is and
+  // and what iteration in the loop its at to draw the ellipses later
+  double min_sep = 2*(projectile_radius + target_radius);
+  double min_sep_time = 0;
+  int    min_sep_i = 0;
   
   int i = 1;  
   do {
@@ -102,6 +109,13 @@ int main(int argc, char *argv[])
 
     // sqrt[ (x1-x2)^2 + (y1-y2)^2 ]
     separation = std::sqrt(std::pow(p1.kinvecs().at(i-1).x() - p2.kinvecs().at(i-1).x(),2) + std::pow(p1.kinvecs().at(i-1).y() - p2.kinvecs().at(i-1).y(),2));
+
+    if ( separation < min_sep ) {
+      min_sep = separation;
+      min_sep_i = i;
+      min_sep_time = delta_t*i;
+    }
+    
     // (x2 - x1 ) / separation
     Fx = ( p2.kinvecs().at(i-1).x() - p1.kinvecs().at(i-1).x() ) / separation;
     // (y2 - y1 ) / separation
@@ -145,7 +159,12 @@ int main(int argc, char *argv[])
     i++;
   } while ( separation <= ( projectile_radius + target_radius ) ) ;
 
-
+  TEllipse *min_sep_ellipse1 = new TEllipse(p1.kinvecs().at(min_sep_i).x(),p1.kinvecs().at(min_sep_i).y(),target_radius,target_radius);
+  TEllipse *min_sep_ellipse2 = new TEllipse(p2.kinvecs().at(min_sep_i).x(),p1.kinvecs().at(min_sep_i).y(),projectile_radius,projectile_radius);
+  TEllipse *end_ellpise1     = new TEllipse(p1.kinvecs().at(p1.kinvecs().size()-1).x(),p1.kinvecs().at(p1.kinvecs().size()-1).y(),target_radius,target_radius);
+  TEllipse *end_ellpise2     = new TEllipse(p2.kinvecs().at(p2.kinvecs().size()-1).x(),p2.kinvecs().at(p2.kinvecs().size()-1).y(),projectile_radius,projectile_radius);
+  
+  
 /*
   std::cout << " ****\t******\t*****\t******\t** " << std::endl;
   std::cout << " * x \t * y \t * vx \t * vy \t * " << std::endl;
