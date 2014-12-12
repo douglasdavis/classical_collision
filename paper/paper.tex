@@ -41,7 +41,7 @@ Any two body collision can be reduced to 2-dimensional motion in a plane contain
 	\label{fig:schematic}
 \end{figure}
 
-In order to rapidly investigate the many possible variations of this seemingly simple two body collision a software simulation was chosen over attempting to solve each variation analytically. Written in C++ and using some of the ROOT particle physics analysis libraries the simulation code at its core operates by iteratively calculating the masses change in position and velocity during a small time step, $\Delta t$, during which the acceleration is assumed to be constant. This is done by calculating $\Delta x$ \eqref{eq:displacement} from the $n-1$ positions, and then $\left|F\right|$ and the unit vector between the two masses centers $\hat{F}_{j\text{ on }i}$ \eqref{eq:force}. Once the force has been estimated it is a simple matter to compute the $n$ time step positions \eqref{eq:position}, and velocities \eqref{eq:velocity}. When calculating the velocity we include a $\left(1-\eta\right)$ term to implement the viscous dampening energy losses were $\eta$ is the proportional decrease in velocity per time step.
+In order to rapidly investigate the many possible variations of this seemingly simple two body collision a software simulation was chosen over attempting to solve each variation analytically. Written in C++ and using some of the \texttt{ROOT}~\cite{ref_root} particle physics analysis libraries the simulation code at its core operates by iteratively calculating the masses change in position and velocity during a small time step, $\Delta t$, during which the acceleration is assumed to be constant. This is done by calculating $\Delta x$ \eqref{eq:displacement} from the $n-1$ positions, and then $\left|F\right|$ and the unit vector between the two masses centers $\hat{F}_{j\text{ on }i}$ \eqref{eq:force}. Once the force has been estimated it is a simple matter to compute the $n$ time step positions \eqref{eq:position}, and velocities \eqref{eq:velocity}. When calculating the velocity we include a $\left(1-\eta\right)$ term to implement the viscous dampening energy losses were $\eta$ is the proportional decrease in velocity per time step.
 
 \begin{equation}\label{eq:position}
 \mathbf{x}^{(i)}_{n} = \mathbf{x}^{(i)}_{n-1} + \dot{\mathbf{x}}^{(i)}_{n-1} \Delta t + \frac{1}{2m_i} \left| F \right| \mathbf{\hat{F}}_{j\text{ on }i} \left(\Delta t\right)^2
@@ -63,7 +63,14 @@ V_n = \frac{k}{\lambda+1}\left(\Delta x_n\right)^{\lambda+1},\quad T_n = \frac{m
 
 \section{Results}
 \subsection{Simulation Performance}
-The simulation was good, here's why - include the single event plots
+One of the first tasks was to validate the simulation framework using a system where the physics was simple and easy to intuitively predict. This system uses a stationary target of radius units 2, with a projectile of radius units 1 incoming at velocity units 5 with an impact parameter of 1 unit. The objects have equal density. We configure this system to have no energy loss ($\eta = 0$), $\lambda=1$ power law, and $k=100$ force constant. First we visualize the track points for each objects tracjectory while they are in contact with each other.
+\begin{figure}[h!]
+  \includegraphics[width=.45\textwidth]{../diff_system_plots/default/x_vs_y_with_ellipse.pdf}
+  \includegraphics[width=.45\textwidth]{../diff_system_plots/default/x_vs_y_with_ellipse_MS.pdf}
+  	          {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
+  \caption{(L) The initial state of the system when the objects come in contact. The collections of points (which form a continuous line) show the position of the center of each object at each time step while the objects are in contact. (R) The state of the system when the objects are at a minimum separation (maximum $\Delta x$ from equilibrium).}
+  \label{fig:tracks_default}
+\end{figure}
 
 \subsection{Initial Velocity Studies}
 The
@@ -91,5 +98,9 @@ The
 
 
 
+\begin{thebibliography}{9}
+\bibitem{ref_root}
+  R.~Brun and F.~Rademakers, \emph{ROOT - An Object Oriented Data Analysis Framework}, Proceedings AIHENP 96 Workshop, Lausanne, Sep. 1996, Nucl. Inst. \& Meth. in Phys. Res. A 389 (1997) 81-86. See also http://root.cern.ch/.
 
+\end{thebibliography}
 \end{document}
