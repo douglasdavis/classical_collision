@@ -331,9 +331,9 @@ int main(int argc, char *argv[])
 
   
   c2we->Modified(); c2we->Update();
-  mgxy->GetXaxis()->SetLimits(-2.2*target_radius,2.2*target_radius);
+  mgxy->GetXaxis()->SetLimits(-3*target_radius,3*target_radius);
   c2we->Modified(); c2we->Update();
-  mgxy->GetYaxis()->SetRangeUser(-2.2*target_radius,2.2*target_radius);
+  mgxy->GetYaxis()->SetRangeUser(-3*target_radius,3*target_radius);
   gPad->Modified();
   c2we->Print("out/x_vs_y_with_ellipse.pdf", "Portrait pdf");
   
@@ -345,9 +345,9 @@ int main(int argc, char *argv[])
 
   
   c2weMS->Modified(); c2weMS->Update();
-  mgxy->GetXaxis()->SetLimits(-2.2*target_radius,2.2*target_radius);
+  mgxy->GetXaxis()->SetLimits(-3*target_radius,3*target_radius);
   c2weMS->Modified(); c2weMS->Update();
-  mgxy->GetYaxis()->SetRangeUser(-2.2*target_radius,2.2*target_radius);
+  mgxy->GetYaxis()->SetRangeUser(-3*target_radius,3*target_radius);
   gPad->Modified();
   c2weMS->Print("out/x_vs_y_with_ellipse_MS.pdf", "Portrait pdf");
 
