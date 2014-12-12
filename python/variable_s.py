@@ -5,6 +5,8 @@ import numpy as np
 import sys
 from styleit import gstyle
 
+ROOT.gROOT.ProcessLine("TGaxis::SetMaxDigits(2);")
+
 gstyle()
 
 data = np.loadtxt(sys.argv[1])
@@ -15,14 +17,16 @@ vfp_vs_ip = ROOT.TGraph()
 vft_vs_ip = ROOT.TGraph()
 el_vs_ip  = ROOT.TGraph()
 
-dx_vs_ip.SetTitle(';s;#Delta x_{max}')
+dx_vs_ip.SetTitle(';s;#frac{#Delta x_{max}}{r_{t}}')
 vfp_vs_ip.SetTitle(';s;Projectile v_{f}')
 vft_vs_ip.SetTitle(';s;Target v_{f}')
 el_vs_ip.SetTitle(';s;Energy Loss')
 
 i = 0
 for iip, ipvx0, ims, ifvt, ifvp in zip(ip,pvx0,ms,fvt,fvp):
-    dx_vs_ip.SetPoint(i,iip,tr[0]+pr[0]-ims)
+    if ifvp > 4.8:
+        continue
+    dx_vs_ip.SetPoint(i,iip,(tr[0]+pr[0]-ims)/tr[0])
     vfp_vs_ip.SetPoint(i,iip,ifvp)
     vft_vs_ip.SetPoint(i,iip,ifvt)
     el_vs_ip.SetPoint(i,iip,0.5*pm[0]*ipvx0*ipvx0-(0.5*pm[0]*ifvp*ifvp+0.5*tm[0]*ifvt*ifvt))

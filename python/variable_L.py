@@ -15,14 +15,14 @@ vfp_vs_L = ROOT.TGraph()
 vft_vs_L = ROOT.TGraph()
 el_vs_L  = ROOT.TGraph()
 
-dx_vs_L.SetTitle(';#lambda;#Delta x_{max}')
+dx_vs_L.SetTitle(';#lambda;#frac{#Delta x_{max}}{r_{t}}')
 vfp_vs_L.SetTitle(';#lambda;Projectile v_{f}')
 vft_vs_L.SetTitle(';#lambda;Target v_{f}')
 el_vs_L.SetTitle(';#lambda;Energy Loss')
 
 i = 0
 for iL, ipvx0, ims, ifvt, ifvp in zip(L,pvx0,ms,fvt,fvp):
-    dx_vs_L.SetPoint(i,iL,tr[0]+pr[0]-ims)
+    dx_vs_L.SetPoint(i,iL,(tr[0]+pr[0]-ims)/tr[0])
     vfp_vs_L.SetPoint(i,iL,ifvp)
     vft_vs_L.SetPoint(i,iL,ifvt)
     el_vs_L.SetPoint(i,iL,0.5*pm[0]*ipvx0*ipvx0-(0.5*pm[0]*ifvp*ifvp+0.5*tm[0]*ifvt*ifvt))
@@ -36,6 +36,7 @@ vfp_vs_L.SetMarkerStyle(7)
 vfp_vs_L.SetMarkerColor(ROOT.kRed)
 
 c1 = ROOT.TCanvas()
+dx_vs_L.GetYaxis().SetTitleOffset(.89)
 dx_vs_L.Draw('AP')
 c2 = ROOT.TCanvas()
 el_vs_L.Draw('AP')
