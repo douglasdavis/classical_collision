@@ -274,7 +274,8 @@ int main(int argc, char *argv[])
   
   TGraph *sep_graph = new TGraph(sep_vector.size(),&time_vector[0],&sep_vector[0]);
   sep_graph->GetXaxis()->SetTitle("t");
-  sep_graph->GetYaxis()->SetTitle("#||{#vec{x_{1}}-#vec{x_{2}}}");
+  sep_graph->GetYaxis()->SetTitle("#||{#vec{x^{(1)}}-#vec{x^{(2)}}}");
+  sep_graph->GetYaxis()->SetTitleOffset(1.6);
   sep_graph->SetMarkerStyle(7);
   sep_graph->Draw("AP");
   sep_graph->SetTitle("Radial Seperation vs Time");
@@ -312,7 +313,7 @@ int main(int argc, char *argv[])
   mgxy->SetTitle("Center of Mass Trajectories");
   mgxy->GetXaxis()->SetTitle("x");
   mgxy->GetYaxis()->SetTitle("y");
-  mgxy->GetYaxis()->SetTitleOffset(1.25); // This plot looked bad it without it but not the others for some reason... ?
+  mgxy->GetYaxis()->SetTitleOffset(1.25);
 
   TLegend* mgxyleg = new TLegend(0.15,0.75,0.4,0.9);
   mgxyleg->AddEntry(xy2,"Projectile","p");
@@ -487,6 +488,7 @@ int main(int argc, char *argv[])
   TGraph *Fmag_graph = new TGraph(Fmag_vector.size(),&time_vector[0],&Fmag_vector[0]);
   Fmag_graph->GetXaxis()->SetTitle("t");
   Fmag_graph->GetYaxis()->SetTitle("#||{F}");
+  Fmag_graph->GetYaxis()->SetTitleOffset(1.45);
   Fmag_graph->SetMarkerStyle(7);
   Fmag_graph->Draw("AP");
   Fmag_graph->SetTitle("Force Magnitude vs Time");

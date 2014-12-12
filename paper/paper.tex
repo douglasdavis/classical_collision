@@ -41,22 +41,23 @@ Any two body collision can be reduced to 2-dimensional motion in a plane contain
 	          \label{fig:schematic}
 \end{figure}
 
-In order to rapidly investigate the many possible variations of this seemingly simple two body collision a software simulation was chosen over attempting to solve each variation analytically. Written in \texttt{C++} and using some of the \texttt{ROOT}~\cite{ref_root} particle physics analysis libraries the simulation code at its core operates by iteratively calculating the object's change in position and velocity during a small time step, $\Delta t$, during which the acceleration is assumed to be constant. This is done by calculating $\Delta x$ \eqref{eq:displacement} from the $n-1$ positions, and then $\left|F\right|$ and the unit vector between the two masses centers $\hat{F}_{j\text{ on }i}$ \eqref{eq:force}. Once the force has been estimated it is a simple matter to compute the $n$ time step positions \eqref{eq:position}, and velocities \eqref{eq:velocity}. When calculating the velocity we include a $\left(1-\eta\right)$ term to implement the viscous dampening energy losses were $\eta$ is the proportional decrease in velocity per time step.
+In order to rapidly investigate the many possible variations of this seemingly simple two body collision a software simulation was chosen over attempting to solve each variation analytically. Written in \texttt{C++} and using some of the \texttt{ROOT}~\cite{ref_root} particle physics analysis libraries the simulation code at its core operates by iteratively calculating the object's change in position and velocity during a small time step, $\Delta t$, during which the acceleration is assumed to be constant. This is done by calculating $\Delta x$ \eqref{eq:displacement} from the $n-1$ positions, and then $\left|F\right|$ and the unit vector between the two masses centers $\mathbf{\hat{F}}_{j\rightarrow i}$ \eqref{eq:force}. Once the force has been estimated it is a simple matter to compute the $n$ time step positions \eqref{eq:position}, and velocities \eqref{eq:velocity}. When calculating the velocity we include a $\left(1-\eta\right)$ term to implement the viscous dampening energy losses were $\eta$ is the proportional decrease in velocity per time step.
 
 \begin{equation}\label{eq:position}
-  \mathbf{x}^{(i)}_{n} = \mathbf{x}^{(i)}_{n-1} + \dot{\mathbf{x}}^{(i)}_{n-1} \Delta t + \frac{1}{2m_i} \left| F \right| \mathbf{\hat{F}}_{j\text{ on }i} \left(\Delta t\right)^2
+  \mathbf{x}^{(i)}_{n} = \mathbf{x}^{(i)}_{n-1} + \dot{\mathbf{x}}^{(i)}_{n-1} \Delta t + \frac{1}{2m_i} \left| F \right| \mathbf{\hat{F}}_{j\rightarrow i} \left(\Delta t\right)^2
 \end{equation}
+
 \begin{equation}\label{eq:velocity}
-  \dot{\mathbf{x}}^{(i)}_{n} = (1-\eta)\dot{\mathbf{x}}^{(i)}_{n-1} + \frac{1}{m_i} \left| F \right| \mathbf{\hat{F}}_{j\text{ on }i} \Delta t
+  \dot{\mathbf{x}}^{(i)}_{n} = (1-\eta)\dot{\mathbf{x}}^{(i)}_{n-1} + \frac{1}{m_i} \left| F \right| \mathbf{\hat{F}}_{j\rightarrow i} \Delta t
 \end{equation}
 \begin{equation}\label{eq:displacement}
   \Delta x_{n-1} = r_1 + r_2 - \left| \mathbf{x}^{(1)}_{n-1}-\mathbf{x}^{(2)}_{n-1} \right|
 \end{equation}
 \begin{equation}\label{eq:force}
-  \left| F \right| = k \left(\Delta x_{n-1}\right)^{\lambda},\quad \mathbf{\hat{F}}_{j\text{ on }i} = \frac{\mathbf{x}^{(i)}_{n-1}-\mathbf{x}^{(j)}_{n-1}}{\left|\mathbf{x}^{(i)}_{n-1}-\mathbf{x}^{(j)}_{n-1}\right|}
+  \left| F \right| = k \left(\Delta x_{n-1}\right)^{\lambda},\quad \mathbf{\hat{F}}_{j\rightarrow i} = \frac{\mathbf{x}^{(i)}_{n-1}-\mathbf{x}^{(j)}_{n-1}}{\left|\mathbf{x}^{(i)}_{n-1}-\mathbf{x}^{(j)}_{n-1}\right|}
 \end{equation}
 
-In addition to the position and velocity of the masses we also calculate their kinetic energies and the potential energy stored in the deformed bodies, e.g. spring \eqref{eq:energy}. The force is conservative, so $\mathbf{F} = - \nabla V \rightarrow V = \int \left|F\right| dx$. With a small enough $\Delta t$ these iterative equations model the physics of the interaction very well. 
+In addition to the position and velocity of the masses we also calculate their kinetic energies and the potential energy stored in the deformed bodies, e.g. spring \eqref{eq:energy}. The force is conservative, so $\mathbf{F} = - \nabla V \rightarrow V = \int \left|F\right| d\left(\Delta x\right)$. With a small enough $\Delta t$ these iterative equations model the physics of the interaction very well. To ensure that $\Delta t$ is not set too large the code checks each masses change in position at every time step. If the change in position is larger than 1\% of the masses radius a warning is generated and the simulation is re-run with a smaller $\Delta t$
 \begin{equation}\label{eq:energy}
   V_n = \frac{k}{\lambda+1}\left(\Delta x_n\right)^{\lambda+1},\quad T_n = \frac{m_1}{2}\left(\dot{\mathbf{x}}^{(1)}_n\right)^2 + \frac{m_2}{2}\left(\dot{\mathbf{x}}^{(2)}_n\right)^2
 \end{equation}
@@ -78,8 +79,10 @@ We also check for kinematic trends to be physically sound for the given initial 
   \caption{Trends for different energies in the system: object and total kinetic energies, potential energy, and the total energy of the system.}
 \end{figure}
 
+
 \subsection{Initial Velocity Studies}
 The
+
 
 \subsection{Impact Parameter Studies}
 The
@@ -90,23 +93,24 @@ The
 \subsection{Energy Dissipation Studies}
 The
 
+
 \section{Conclusion}
 The
 
 \clearpage
-\begin{appendices}
-  \singlespacing
-  \section{main.cpp} \label{sec:main}
-  %\lstinputlisting{main.cpp}% lots of pages, only uncomment when you want it
-  % use [firstline=, lastline=] to select only the physics loop
-
-\end{appendices}
-
-
-
 \begin{thebibliography}{9}
+\section{Bibliography}
 \bibitem{ref_root}
   R.~Brun and F.~Rademakers, \emph{ROOT - An Object Oriented Data Analysis Framework}, Proceedings AIHENP 96 Workshop, Lausanne, Sep. 1996, Nucl. Inst. \& Meth. in Phys. Res. A 389 (1997) 81-86. See also http://root.cern.ch/.
 
 \end{thebibliography}
+
+\clearpage
+\begin{appendices}
+  \singlespacing
+  \section{main.cpp Physics Loop} \label{sec:main.cpp}
+  \lstinputlisting[firstline=170, lastline=246]{../main.cpp}% lots of pages, only uncomment when you want it
+
+\end{appendices}
+
 \end{document}
