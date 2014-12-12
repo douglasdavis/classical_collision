@@ -1,0 +1,4 @@
+plot the delta x max vs. these 4 things
+plot the final velocity vs these 4 things
+plot energy loss vs these 4 things
+and make diagram
