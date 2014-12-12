@@ -5,3 +5,5 @@ main
 paper/*.log
 paper/*.aux
 paper/paper.pdf
+*.DS_Store
+*.DS_store

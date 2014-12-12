@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
     else if ( my_case == 6 )
       K = 1000.0, target_radius = 1.00, projectile_radius = 1.00, target_mass = 3.00, projectile_mass = 3.00, impact_parameter = 0.00, projectile_vx0 = 5.00, target_vx0 = -5.00;
     else if ( my_case == 7 )
-      K = 1000.0, target_radius = 3.00, projectile_radius = 1.00, target_mass = 15.00, projectile_mass = 1.00, impact_parameter = 0.00, projectile_vx0 = 1.00, target_vx0 = -5.00;
+      K = 1000.0, target_radius = 3.00, projectile_radius = 1.00, target_mass = 30.00, projectile_mass = 1.00, impact_parameter = 0.00, projectile_vx0 = 8.00, target_vx0 = -2.00;
     else
       std::cout << "case parameter out of bounds, using defaults" << std::endl;
   }
