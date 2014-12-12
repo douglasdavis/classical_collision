@@ -66,15 +66,15 @@ In addition to the position and velocity of the masses we also calculate their k
 \subsection{Simulation Performance}
 One of the first tasks was to validate the simulation framework using a system where the physics was simple and easy to intuitively predict. This system uses a stationary target of radius units 2, with a projectile of radius units 1 incoming at velocity units 5 with an impact parameter of 1 unit. The objects have equal density. We configure this system to have no energy loss ($\eta = 0$), $\lambda=1$ power law, and $k=100$ force constant. First we visualize the track points for each objects tracjectory while they are in contact with each other. We show this visualization in Figure~\ref{fig:tracks_default}.
 \begin{figure}[h!]
-  \includegraphics[width=.45\textwidth]{../diff_system_plots/default/x_vs_y_with_ellipse.pdf}
-  \includegraphics[width=.45\textwidth]{../diff_system_plots/default/x_vs_y_with_ellipse_MS.pdf}
+  \includegraphics[width=.45\textwidth]{plots/default/x_vs_y_with_ellipse.pdf}
+  \includegraphics[width=.45\textwidth]{plots/default/x_vs_y_with_ellipse_MS.pdf}
                   {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
                   \caption{(L) The initial state of the system when the objects come in contact. The collections of points (which form a continuous line) show the position of the center of each object at each time step while the objects are in contact. (R) The state of the system when the objects are at a minimum separation (maximum $\Delta x$ from equilibrium).}
                   \label{fig:tracks_default}
 \end{figure}
 We also check for kinematic trends to be physically sound for the given initial conditions and parameters of the system.
 \begin{figure}
-  \includegraphics[width=.8\textwidth]{../diff_system_plots/default/E_vs_t.pdf}
+  \includegraphics[width=.8\textwidth]{plots/default/E_vs_t.pdf}
   {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
   \caption{Trends for different energies in the system: object and total kinetic energies, potential energy, and the total energy of the system.}
 \end{figure}
