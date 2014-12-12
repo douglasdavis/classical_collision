@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     ("spring,k", po::value<double>()->default_value(100.0),"spring constant")
     ("eta,e",    po::value<double>()->default_value(0.000),"energy disipation")
     ("lambda,l", po::value<double>()->default_value(1.000),"power law")
-    ("case,c",   po::value<int>()->default_value(0),"case selection\n0  defaults\n1  hard k, off center\n2  hard k, on center\n3  soft k, off center\n4  soft k, on center\n5  hard k, equal balls, on center");
+    ("case,c",   po::value<int>()->default_value(0),"case selection\n0  defaults\n1  hard k, off center\n2  hard k, on center\n3  soft k, off center\n4  soft k, on center\n5  hard k, equal balls, on center\n6  same balls, hard k, p_tot = 0\n7  big target coming at projectile, hard k");
 
   po::variables_map vm;
   po::store(po::parse_command_line(argc,argv,desc),vm);
@@ -108,6 +108,10 @@ int main(int argc, char *argv[])
       K = 10.0,  impact_parameter = 0;
     if ( my_case == 5 )
       K = 1000.0, target_radius = 1.00, projectile_radius = 1.00, target_mass = 5.00, projectile_mass = 5.00, impact_parameter = 0.00;
+    if ( my_case == 6 )
+      K = 1000.0, target_radius = 1.00, projectile_radius = 1.00, target_mass = 3.00, projectile_mass = 3.00, impact_parameter = 0.00, projectile_vx0 = 5.00, target_vx0 = -5.00;
+    if ( my_case == 7 )
+      K = 1000.0, target_radius = 3.00, projectile_radius = 1.00, target_mass = 15.00, projectile_mass = 1.00, impact_parameter = 0.00, projectile_vx0 = 1.00, target_vx0 = -5.00;
     else
       std::cout << "case parameter out of bounds, using defaults" << std::endl;
   }
@@ -143,7 +147,7 @@ int main(int argc, char *argv[])
   std::vector<double> Etot_vector;
   PE_vector.push_back(0.0);
   projectile_KE_vector.push_back(0.5*projectile_mass*projectile_vx0*projectile_vx0);
-  target_KE_vector.push_back(0.0);
+  target_KE_vector.push_back(0.5*target_mass*target_vx0*target_vx0);
   total_KE_vector.push_back(projectile_KE_vector.at(0)+target_KE_vector.at(0));
   Etot_vector.push_back(PE_vector.at(0)+total_KE_vector.at(0));
   CM_x_vector.push_back((initial_kinvec1.x()*target_mass + initial_kinvec2.x()*projectile_mass)/(projectile_mass+target_mass));
