@@ -2,3 +2,6 @@
 main
 /out
 *.pyc
+paper/*.log
+paper/*.aux
+paper/paper.pdf
