@@ -2,7 +2,7 @@ import ROOT
 from ROOT import gStyle
 
 def gstyle():
-    ROOT.gROOT.ProcessLine('TGaxis::SetMaxDigits(3);')    
+    ROOT.gROOT.ProcessLine('TGaxis::SetMaxDigits(2);')    
     gStyle.SetFrameBorderMode(0)
     gStyle.SetFrameFillColor(0)
     gStyle.SetCanvasBorderMode(0)
