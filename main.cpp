@@ -26,7 +26,7 @@ Double_t flat_fit(Double_t *v, Double_t *par)
 }
 
 void print_single_stat(double tm, double tr, double pm, double pr, double dt, double pvx0, double tvx0,
-		       double ip, double k, double eta, double L, double ms, double fvxt, double fvyt, double fvt, double fvxp, double fvyp, double fvp)
+		       double ip, double k, double eta, double L, double ms, double fvxt, double fvyt, double fvt, double fvxp, double fvyp, double fvp, int tts)
 {
   std::cout << tm   << "\t"
 	    << tr   << "\t"
@@ -46,6 +46,7 @@ void print_single_stat(double tm, double tr, double pm, double pr, double dt, do
 	    << fvxp << "\t"
 	    << fvyp << "\t"
 	    << fvp  << "\t"
+	    << tts  << "\t"
 	    << std::endl;
 }
 
@@ -182,7 +183,6 @@ int main(int argc, char *argv[])
     Fy = ( p2.kinvecs().at(i-1).y() - p1.kinvecs().at(i-1).y() ) / separation;
     // ( k * sqrt[ r1 + r2 - separation ]^(lambda) = k*displacement_from_equilbrium raised to lambda
     Fmag = K*std::pow(((p1.radius() + p2.radius()) - separation),Lambda);
-    
     kinvec new_kv1;
     kinvec new_kv2;
 
@@ -557,10 +557,11 @@ int main(int argc, char *argv[])
 
   print_single_stat(target_mass, target_radius, projectile_mass, projectile_radius,
 		    delta_t, projectile_vx0, target_vx0, impact_parameter, K, eta, Lambda, min_sep,
-		    p1.kinvecs().at(p1.kinvecs().size()-1).vx(),p1.kinvecs().at(p1.kinvecs().size()-1).vy(),
-		    std::sqrt(std::pow(p1.kinvecs().at(p1.kinvecs().size()-1).vx(),2)+std::pow(p1.kinvecs().at(p1.kinvecs().size()-1).vy(),2)),
-		    p2.kinvecs().at(p2.kinvecs().size()-1).vx(),p2.kinvecs().at(p2.kinvecs().size()-1).vy(),
-		    std::sqrt(std::pow(p2.kinvecs().at(p2.kinvecs().size()-1).vx(),2)+std::pow(p2.kinvecs().at(p2.kinvecs().size()-1).vy(),2)));
+		    p1.kinvecs().at(p1.kinvecs().size()-2).vx(),p1.kinvecs().at(p1.kinvecs().size()-2).vy(),
+		    std::sqrt(std::pow(p1.kinvecs().at(p1.kinvecs().size()-2).vx(),2)+std::pow(p1.kinvecs().at(p1.kinvecs().size()-2).vy(),2)),
+		    p2.kinvecs().at(p2.kinvecs().size()-2).vx(),p2.kinvecs().at(p2.kinvecs().size()-2).vy(),
+		    std::sqrt(std::pow(p2.kinvecs().at(p2.kinvecs().size()-2).vx(),2)+std::pow(p2.kinvecs().at(p2.kinvecs().size()-2).vy(),2)),
+		    p1.kinvecs().size()-1);
   
   return 0;
 }

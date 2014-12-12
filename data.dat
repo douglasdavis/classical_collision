@@ -1,0 +1,8 @@
+case parameter out of bounds, using defaults
+5	3	1	1	0.001	5	0	2	100	0	0.5	3.76547	1.16294	-0.773097	1.39646	-0.814679	3.86549	3.9504	188	
+case parameter out of bounds, using defaults
+5	3	1	1	0.001	5	0	2	100	0	0.525	3.75753	1.15955	-0.774132	1.39421	-0.79773	3.87066	3.95201	193	
+case parameter out of bounds, using defaults
+5	3	1	1	0.001	5	0	2	100	0	0.55	3.74964	1.15647	-0.77537	1.39234	-0.782338	3.87685	3.955	199	
+case parameter out of bounds, using defaults
+5	3	1	1	0.001	5	0	2	100	0	0.575	3.74179	1.15332	-0.776522	1.39037	-0.76662	3.88261	3.95757	204	

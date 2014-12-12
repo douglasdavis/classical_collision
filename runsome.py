@@ -2,7 +2,7 @@
 
 import subprocess
 
-cur = 0.001
+cur = .5
 for i in xrange(100):
-    subprocess.call("./main -e "+str(cur)+" >> data.dat",shell=True)
-    cur = cur + 0.0002
+    subprocess.call("./main -c 6 -l "+str(cur)+" >> data.dat",shell=True)
+    cur = cur + 0.025

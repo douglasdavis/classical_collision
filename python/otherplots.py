@@ -5,17 +5,24 @@ import numpy as np
 import sys
 
 data = np.loadtxt(sys.argv[1])
-tm, tr, pm, pr, dt, pvx0, tvx0, ip, k, eta, L, ms, fvxt, fvyt, fvt, fvxp, fvyp, fvp = data.T
+tm, tr, pm, pr, dt, pvx0, tvx0, ip, k, eta, L, ms, fvxt, fvyt, fvt, fvxp, fvyp, fvp, tts = data.T
 
-print ms
-print eta
-
-ms_vs_eta = ROOT.TGraph()
+dx_vs_L = ROOT.TGraph()
+ms_vs_L = ROOT.TGraph()
 i = 0
-for m,n in zip(ms,eta):
-    ms_vs_eta.SetPoint(i,m,n)
+for m,n in zip(ms,L):
+    dx_vs_L.SetPoint(i,tr[0]+pr[0]-m,n)
+    ms_vs_L.SetPoint(i,m,n)
     i = i + 1
-ms_vs_eta.SetMarkerStyle(7)
-ms_vs_eta.Draw('AP')
+
+dx_vs_L.SetMarkerStyle(7)
+ms_vs_L.SetMarkerStyle(7)
+ms_vs_L.SetMarkerColor(ROOT.kRed)
+
+mg = ROOT.TMultiGraph()
+#mg.Add(ms_vs_L)
+mg.Add(dx_vs_L)
+
+mg.Draw('AP')
 
 raw_input('')
