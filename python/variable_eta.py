@@ -15,17 +15,17 @@ vfp_vs_eta = ROOT.TGraph()
 vft_vs_eta = ROOT.TGraph()
 el_vs_eta  = ROOT.TGraph()
 
-dx_vs_eta.SetTitle(';#eta;#Delta x_{max}')
+dx_vs_eta.SetTitle(';#eta;#Delta x_{max}/r_{t}')
 vfp_vs_eta.SetTitle(';#eta;Projectile v_{f}')
 vft_vs_eta.SetTitle(';#eta;Target v_{f}')
-el_vs_eta.SetTitle(';#eta;Energy Loss')
+el_vs_eta.SetTitle(';#eta;(E_{0}-E_{f})/E_{0}')
 
 i = 0
 for ieta, ipvx0, ims, ifvt, ifvp in zip(eta,pvx0,ms,fvt,fvp):
-    dx_vs_eta.SetPoint(i,ieta,tr[0]+pr[0]-ims)
+    dx_vs_eta.SetPoint(i,ieta,(tr[0]+pr[0]-ims)/tr[0])
     vfp_vs_eta.SetPoint(i,ieta,ifvp)
     vft_vs_eta.SetPoint(i,ieta,ifvt)
-    el_vs_eta.SetPoint(i,ieta,0.5*pm[0]*ipvx0*ipvx0-(0.5*pm[0]*ifvp*ifvp+0.5*tm[0]*ifvt*ifvt))
+    el_vs_eta.SetPoint(i,ieta,(0.5*pm[0]*ipvx0*ipvx0-(0.5*pm[0]*ifvp*ifvp+0.5*tm[0]*ifvt*ifvt))/(0.5*pm[0]*ipvx0*ipvx0))
     i = i + 1
                      
 dx_vs_eta.SetMarkerStyle(7)

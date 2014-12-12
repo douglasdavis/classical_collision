@@ -15,17 +15,17 @@ vfp_vs_pvinit = ROOT.TGraph()
 vft_vs_pvinit = ROOT.TGraph()
 el_vs_pvinit  = ROOT.TGraph()
 
-dx_vs_pvinit.SetTitle(';Projectile v_{0};#Delta x_{max}')
+dx_vs_pvinit.SetTitle(';Projectile v_{0};#frac{#Delta x_{max}}{r_{t}}')
 vfp_vs_pvinit.SetTitle(';Projectile v_{0};Projectile v_{f}')
 vft_vs_pvinit.SetTitle(';Projectile v_{0};Target v_{f}')
-el_vs_pvinit.SetTitle(';Projectile v_{0};Energy Loss')
+el_vs_pvinit.SetTitle(';Projectile v_{0};(E_{0}-E_{f})/E_{0}')
 
 i = 0
 for ipvinit, ipvx0, ims, ifvt, ifvp in zip(pvx0,pvx0,ms,fvt,fvp):
-    dx_vs_pvinit.SetPoint(i,ipvinit,tr[0]+pr[0]-ims)
+    dx_vs_pvinit.SetPoint(i,ipvinit,(tr[0]+pr[0]-ims)/tr[0])
     vfp_vs_pvinit.SetPoint(i,ipvinit,ifvp)
     vft_vs_pvinit.SetPoint(i,ipvinit,ifvt)
-    el_vs_pvinit.SetPoint(i,ipvinit,0.5*pm[0]*ipvx0*ipvx0-(0.5*pm[0]*ifvp*ifvp+0.5*tm[0]*ifvt*ifvt))
+    el_vs_pvinit.SetPoint(i,ipvinit,(0.5*pm[0]*ipvx0*ipvx0-(0.5*pm[0]*ifvp*ifvp+0.5*tm[0]*ifvt*ifvt))/(0.5*pm[0]*ipvx0*ipvx0))
     i = i + 1
                      
 dx_vs_pvinit.SetMarkerStyle(7)
@@ -36,6 +36,7 @@ vfp_vs_pvinit.SetMarkerStyle(7)
 vfp_vs_pvinit.SetMarkerColor(ROOT.kRed)
 
 c1 = ROOT.TCanvas()
+dx_vs_pvinit.GetYaxis().SetTitleOffset(.89)
 dx_vs_pvinit.Draw('AP')
 c2 = ROOT.TCanvas()
 el_vs_pvinit.Draw('AP')
