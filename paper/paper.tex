@@ -76,12 +76,12 @@ One of the first tasks was to validate the simulation framework using a system w
 Potential and kinetic energy of the system is tracked throughout the simulation steps giving us the ability to moniter total energy conservation. It also allows us to visualize the flow of energy throughout the system. For the default configuration, that energy flow is shown in Figure~\ref{fig:energy_default}. It can be seen that the total energy trend is not completely constant. This is believed to be from the approximate quality of the simulation using finite time steps. The discrepancy is very small.
 \begin{figure}
   \includegraphics[width=.8\textwidth]{plots/default/E_vs_t.pdf}
-  {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
-  \caption{Trends for different energies in the system: object and total kinetic energies, potential energy, and the total energy of the system.}
-  \label{fig:energy_default}
+                  {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
+                  \caption{Trends for different energies in the system: object and total kinetic energies, potential energy, and the total energy of the system.}
+                  \label{fig:energy_default}
 \end{figure}
 
-\subsubsection{Equal Masses, zero net momentum}
+\subsubsection{Equal masses, zero net momentum}
 Another system we investigated for validation was a system with two identical objects colliding with each other at equal but opposite velocities. In this system the objects have equal density with a radius of 1 and the initial velocities are $5$ and $-5$, respectively; the force constant was $k = 1000$ and $\lambda = 1$. The observed behavior is present in Figures~\ref{fig:tracks_c6}~and~\ref{fig:vx_c6}. The trends for the motions of the objects are as expected, specifically we were looking for antisymmetric velocity trends and constant system center of mass momentum.
 \begin{figure}[h!]
   \includegraphics[width=.45\textwidth]{plots/out_c6/x_vs_y_with_ellipse.pdf}
@@ -118,31 +118,35 @@ Many systems were simulated where we varied the initial velocity. Figure~\ref{fi
 \begin{figure}[h!]
   \includegraphics[width=.45\linewidth]{plots/trend_plots/dxmax_vs_pvinit.pdf}
   \includegraphics[width=.45\linewidth]{plots/trend_plots/Eloss_vs_pvinit.pdf}
-  \caption{(L) The maximum displacement from equilibrium divided by the target radius vs. the initial velocity of the projectile. (R) The energy loss divided by the initial energy of the system vs. initial velocity of the projectile.}
-  \label{fig:changing_pvinit1}
+                  {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
+                  \caption{(L) The maximum displacement from equilibrium per target radius vs. the initial velocity of the projectile. (R) The energy loss divided by the initial energy of the system vs. initial velocity of the projectile.}
+                  \label{fig:changing_pvinit1}
 \end{figure}
 
 \subsection{Impact Parameter Studies}
 Many systems were simulated where we varied the impact parameter. Similar to the previous study, we again look at the trend of maximum displacement from equilibrium versus the varying parameter, which is now the impact parameter. During the generation of this sample, all other paramters were constant: target radius and mass of 2, projectile radius of 0.25 and radius of 1 (equal densities). The projectile initial velocity was 5, $\eta = 0$, and $\lambda = 1$. The trend shows that as the collision point becomes more off-center with respect to the target, the smaller the spring action between the two objects.
 \begin{figure}[h!]
   \includegraphics[width=.45\linewidth]{plots/trend_plots/Eloss_vs_s.pdf}
-  \caption{The maximum displacement from equilibrium divided by the target radius vs. impact parameters.}
-  \label{fig:changing_s1}  
+                  {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
+                  \caption{The maximum displacement from equilibrium per the target radius vs. impact parameters.}
+                  \label{fig:changing_s1}  
 \end{figure}
-Figure~\ref{fig:changing_s2} shows the trend of the final velocities of the objects versus the impact parameter.
+Figure~\ref{fig:changing_s2} shows the trend of the final velocities of the objects versus the impact parameter. We find that for more head on collisions, the projectile transfers more momentum to the target, while for large impact parameters the projectile keeps most of its momentum.
 \begin{figure}[h!]
   \includegraphics[width=.45\linewidth]{plots/trend_plots/pvf_vs_s.pdf}
   \includegraphics[width=.45\linewidth]{plots/trend_plots/tvf_vs_s.pdf}
-  \caption{(L) The projectile final velocity vs. impact parameters. (R) The target final velocity vs. impact parameters.}
-  \label{fig:changing_s2}
+                  {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
+                  \caption{(L) The projectile final velocity vs. impact parameters. (R) The target final velocity vs. impact parameters.}
+                  \label{fig:changing_s2}
 \end{figure}
 
 \subsection{Force Power Law Dependence}
-Many systems were simulated where we varied the force power law parameter $\lambda$. Figure~\ref{fig:changing_lambda}.
+Many systems were simulated where we varied the force power law parameter $\lambda$. We varied $\lambda$ from $1/2$ to $3$, which corresponds to a force law depending on the square root of the displacement up to depending on the cube of the displacement. Figure~\ref{fig:changing_lambda} shows this sample of maximum displacement from equilibrium versus the force law power. The trend has a positive slope throughout. This is unexpected, as we thought a larger $\lambda$ would correspond to a stronger restoring force between the objects, causing a smaller deformation. We now believe this is because all of the displacement values, $\Delta x$, are less than 1.
 \begin{figure}[h!]
   \includegraphics[width=.45\linewidth]{plots/trend_plots/dxmax_vs_lambda.pdf}
-  \caption{lambda}
-  \label{fig:changing_lambda}
+                  {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
+                  \caption{The maximum displacement from equilibrium per target radius vs. $\lambda$}
+                  \label{fig:changing_lambda}
 \end{figure}
 
 \subsection{Energy Dissipation Studies}
@@ -150,8 +154,10 @@ Many systems were simulated where we varied the energy dissipation parameter $\e
 \begin{figure}[h!]
   \includegraphics[width=.45\linewidth]{plots/trend_plots/dxmax_vs_eta.pdf}
   \includegraphics[width=.45\linewidth]{plots/trend_plots/Eloss_vs_eta.pdf}
-  \caption{eta}
-  \label{fig:changing_eta}
+                  {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
+
+                  \caption{eta}
+                  \label{fig:changing_eta}
 \end{figure}
 
 
@@ -160,7 +166,7 @@ The
 
 \clearpage
 \begin{thebibliography}{9}
-\section{Bibliography}
+  \section{Bibliography}
 \bibitem{ref_root}
   R.~Brun and F.~Rademakers, \emph{ROOT - An Object Oriented Data Analysis Framework}, Proceedings AIHENP 96 Workshop, Lausanne, Sep. 1996, Nucl. Inst. \& Meth. in Phys. Res. A 389 (1997) 81-86. See also http://root.cern.ch/.
 
