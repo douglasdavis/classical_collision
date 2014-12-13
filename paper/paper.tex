@@ -64,7 +64,7 @@ In addition to the position and velocity of the masses we also calculate their k
 \section{Results}
 \subsection{Simulation Performance}
 \subsubsection{Default Configuration}
-One of the first tasks was to validate the simulation framework using a system where the physics was simple and easy to intuitively predict. This system uses a stationary target of radius 2, with a projectile of radius 1 incoming at velocity 5 with an impact parameter of 1. The objects have equal density. We configure this system to have no energy loss ($\eta = 0$), $\lambda=1$ power law, and $k=100$ spring constant. To begin to get an understanding of the collision we first plot each objects center of mass trajectory during the time when they are in contact with each other and are undergoing accelerations (Figure~\ref{fig:tracks_default}). The projectile rebounds off the target sending it off at a slow velocity in the oposite direction will the systems center of mass steadly moves in a straight line.
+One of the first tasks was to validate the simulation framework using a system where the physics was simple and easy to intuitively predict. This system uses a stationary target of radius 2, with a projectile of radius 1 incoming at velocity 5 with an impact parameter of 1. The objects have equal density. We configure this system to have no energy loss ($\eta = 0$), $\lambda=1$ power law, and $k=100$ force constant. To begin to get an understanding of the collision we first plot each objects center of mass trajectory during the time when they are in contact with each other and are undergoing accelerations (Figure~\ref{fig:tracks_default}). The projectile rebounds off the target sending it off at a slow velocity in the oposite direction will the systems center of mass steadly moves in a straight line.
 \begin{figure}[h!]
   \includegraphics[width=.45\textwidth]{plots/default/x_vs_y_with_ellipse.pdf}
   \includegraphics[width=.45\textwidth]{plots/default/x_vs_y_with_ellipse_MS.pdf}
@@ -81,8 +81,8 @@ Potential and kinetic energy of the system is tracked throughout the simulation 
   \label{fig:energy_default}
 \end{figure}
 
-\subsubsection{Equal Masses, Zero Momentum}
-Another system we investigated for validation was a system with two identical objects colliding with each other at equal but opposite velocities. In this system the objects have equal density with a radius of 1 and the initial velocities are $5$ and $-5$, respectively. The observed behavior is present in Figures~\ref{fig:tracks_c6}~and~\ref{fig:vx_c6}. The trends for the motions of the objects are as expected, specifically we were looking for antisymmetric velocity trends and constant system center of mass momentum.
+\subsubsection{Equal Masses, zero net momentum}
+Another system we investigated for validation was a system with two identical objects colliding with each other at equal but opposite velocities. In this system the objects have equal density with a radius of 1 and the initial velocities are $5$ and $-5$, respectively; the force constant was $k = 1000$ and $\lambda = 1$. The observed behavior is present in Figures~\ref{fig:tracks_c6}~and~\ref{fig:vx_c6}. The trends for the motions of the objects are as expected, specifically we were looking for antisymmetric velocity trends and constant system center of mass momentum.
 \begin{figure}[h!]
   \includegraphics[width=.45\textwidth]{plots/out_c6/x_vs_y_with_ellipse.pdf}
   \includegraphics[width=.45\textwidth]{plots/out_c6/x_vs_y_with_ellipse_MS.pdf}
@@ -97,21 +97,61 @@ Another system we investigated for validation was a system with two identical ob
                   \label{fig:vx_c6}
 \end{figure}
 
-\subsubsection{Large fast moving target on slow moving projectile}
-the
-
+\subsubsection{Large, slow moving target with small, fast projectile}
+The final validation system we investigated was made up of a target with mass 30 and radius 3 moving with velocity $-2$ and a projectile with mass 1 and radius 1 moving with velocity 8; the force constant was $k = 1000$ and $\lambda = 1$. The impact parameter was set to 0. For this system we were looking for large momentum transfer to the projectile (essentially being quickly turned around by the slightly effected target). Figure~\ref{fig:tracks_c7} shows the object trajectories. Figure~\ref{fig:vx_c7} shows the horizontal velocities for the system. As expectd, the large and slow target is slightly effected and its motion remains in the same direction, while the small and fast projectile is deflected against the target and moves away at a faster velocity compared to its incoming velocity.
+\begin{figure}[h!]
+  \includegraphics[width=.45\textwidth]{plots/out_c7/x_vs_y_with_ellipse.pdf}
+  \includegraphics[width=.45\textwidth]{plots/out_c7/x_vs_y_with_ellipse_MS.pdf}
+                  {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
+                  \caption{(L) Object initial state, with tracks points (R) Objects at minimum separation, with track points}
+                  \label{fig:tracks_c7}
+\end{figure}
+\begin{figure}[h!]
+  \includegraphics[width=.45\textwidth]{plots/out_c7/vx_vs_t.pdf}
+                  {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
+                  \caption{The velocity trend for each object and the center of mass. The velocity of the target is slightly changed, and stays in the same direction (to the left), while the incoming projectile is quickly turned around and given a larger velocity in the opposite direction compared to where it came out.}
+                  \label{fig:vx_c7}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% trend studies %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Initial Velocity Studies}
-The
-
+Many systems were simulated where we varied the initial velocity. Figure~\ref{fig:changing_pvinit1}(L) shows the maximum displacement from the ``spring'' equilibrium position versus initial velocity of the projectile. All of these systems were consistent in other parameters. This includes target radius and mass of 2, projectile radius of 0.25 and radius of 1 (equal densities). The impact parameter was 1, $\eta = 0$, and $\lambda = 1$. Figure~\ref{fig:changing_pvinit1}(R) shows the energy loss per initial energy for the interaction. A perfect system would have a flat line at zero, but we are using finite time steps with this computational approximaton, therefore we have a slight gain in energy for low initial velocities. Figure~\ref{fig:energy_default} shows a a small increase in total energy for that particular system.
+\begin{figure}[h!]
+  \includegraphics[width=.45\linewidth]{plots/trend_plots/dxmax_vs_pvinit.pdf}
+  \includegraphics[width=.45\linewidth]{plots/trend_plots/Eloss_vs_pvinit.pdf}
+  \caption{(L) The maximum displacement from equilibrium divided by the target radius vs. the initial velocity of the projectile. (R) The energy loss divided by the initial energy of the system vs. initial velocity of the projectile.}
+  \label{fig:changing_pvinit1}
+\end{figure}
 
 \subsection{Impact Parameter Studies}
-The
+Many systems were simulated where we varied the impact parameter. Figures~\ref{fig:changing_s1}~and~\ref{fig:changing_s2}.
+\begin{figure}[h!]
+  \includegraphics[width=.45\linewidth]{plots/trend_plots/Eloss_vs_s.pdf}
+  \caption{The energy loss divided by the initial energy of the system vs. impact parameters.}
+  \label{fig:changing_s1}  
+\end{figure}
+\begin{figure}[h!]
+  \includegraphics[width=.45\linewidth]{plots/trend_plots/pvf_vs_s.pdf}
+  \includegraphics[width=.45\linewidth]{plots/trend_plots/tvf_vs_s.pdf}
+  \caption{(L) The projectile final velocity vs. impact parameters. (R) The target final velocity vs. impact parameters.}
+  \label{fig:changing_s2}
+\end{figure}
 
 \subsection{Force Power Law Dependence}
-The
+Many systems were simulated where we varied the force power law parameter $\lambda$. Figure~\ref{fig:changing_lambda}.
+\begin{figure}[h!]
+  \includegraphics[width=.45\linewidth]{plots/trend_plots/dxmax_vs_lambda.pdf}
+  \caption{lambda}
+  \label{fig:changing_lambda}
+\end{figure}
 
 \subsection{Energy Dissipation Studies}
-The
+Many systems were simulated where we varied the energy dissipation parameter $\eta$. Figure~\ref{fig:changing_eta}.
+\begin{figure}[h!]
+  \includegraphics[width=.45\linewidth]{plots/trend_plots/dxmax_vs_eta.pdf}
+  \includegraphics[width=.45\linewidth]{plots/trend_plots/Eloss_vs_eta.pdf}
+  \caption{eta}
+  \label{fig:changing_eta}
+\end{figure}
 
 
 \section{Conclusion}
@@ -126,11 +166,11 @@ The
 \end{thebibliography}
 
 \clearpage
-\begin{appendices}
-  \singlespacing
-  \section{main.cpp Physics Loop} \label{sec:main.cpp}
-  \lstinputlisting[firstline=170, lastline=246]{../main.cpp}% lots of pages, only uncomment when you want it
+%\begin{appendices}
+%  \singlespacing
+%  \section{main.cpp Physics Loop} \label{sec:main.cpp}
+%  \lstinputlisting[firstline=170, lastline=246]{../main.cpp}% lots of pages, only uncomment when you want it
 
-\end{appendices}
+%\end{appendices}
 
 \end{document}
