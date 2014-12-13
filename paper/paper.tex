@@ -114,7 +114,7 @@ The final validation system we investigated was made up of a target with mass 30
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% trend studies %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Initial Velocity Studies}
-Many systems were simulated where we varied the initial velocity. Figure~\ref{fig:changing_pvinit1}(L) shows the maximum displacement from the ``spring'' equilibrium position versus initial velocity of the projectile. All of these systems were consistent in other parameters. This includes target radius and mass of 2, projectile radius of 0.25 and radius of 1 (equal densities). The impact parameter was 1, $\eta = 0$, and $\lambda = 1$. Figure~\ref{fig:changing_pvinit1}(R) shows the energy loss per initial energy for the interaction. A perfect system would have a flat line at zero, but we are using finite time steps with this computational approximaton, therefore we have a slight gain in energy for low initial velocities. Figure~\ref{fig:energy_default} shows a a small increase in total energy for that particular system.
+Many systems were simulated where we varied the initial velocity. Figure~\ref{fig:changing_pvinit1}(L) shows the maximum displacement from the ``spring'' equilibrium position versus initial velocity of the projectile. All of these systems were consistent in other parameters. This includes target radius and mass of 2, projectile radius of 0.25 and radius of 1 (equal densities). The impact parameter was 1, $\eta = 0$, and $\lambda = 1$. Figure~\ref{fig:changing_pvinit1}(R) shows the energy loss per initial energy for the sample of systems. A perfect system would have a flat line at zero, but we are using finite time steps with this computational approximaton, therefore we have a slight gain in energy for low initial velocities. Figure~\ref{fig:energy_default} shows a a small increase in total energy for that particular system.
 \begin{figure}[h!]
   \includegraphics[width=.45\linewidth]{plots/trend_plots/dxmax_vs_pvinit.pdf}
   \includegraphics[width=.45\linewidth]{plots/trend_plots/Eloss_vs_pvinit.pdf}
@@ -123,12 +123,13 @@ Many systems were simulated where we varied the initial velocity. Figure~\ref{fi
 \end{figure}
 
 \subsection{Impact Parameter Studies}
-Many systems were simulated where we varied the impact parameter. Figures~\ref{fig:changing_s1}~and~\ref{fig:changing_s2}.
+Many systems were simulated where we varied the impact parameter. Similar to the previous study, we again look at the trend of maximum displacement from equilibrium versus the varying parameter, which is now the impact parameter. During the generation of this sample, all other paramters were constant: target radius and mass of 2, projectile radius of 0.25 and radius of 1 (equal densities). The projectile initial velocity was 5, $\eta = 0$, and $\lambda = 1$. The trend shows that as the collision point becomes more off-center with respect to the target, the smaller the spring action between the two objects.
 \begin{figure}[h!]
   \includegraphics[width=.45\linewidth]{plots/trend_plots/Eloss_vs_s.pdf}
-  \caption{The energy loss divided by the initial energy of the system vs. impact parameters.}
+  \caption{The maximum displacement from equilibrium divided by the target radius vs. impact parameters.}
   \label{fig:changing_s1}  
 \end{figure}
+Figure~\ref{fig:changing_s2} shows the trend of the final velocities of the objects versus the impact parameter.
 \begin{figure}[h!]
   \includegraphics[width=.45\linewidth]{plots/trend_plots/pvf_vs_s.pdf}
   \includegraphics[width=.45\linewidth]{plots/trend_plots/tvf_vs_s.pdf}
