@@ -33,13 +33,13 @@
   This paper describes a computational study of two body collisions where the dynamics of the bodies are governed by a Hooke's Law type force at the interaction points. We investigate a number of scenarios involving a stationary target mass that is stuck by a projectile mass with some horizontal velocity in a two dimensional plane, as well as scenarios where both masses are moving in towards each other. The masses trajectories are determined from a simulation software package, written by the authors, that models the force between the masses as they interact with each other based on the initial kinematic state of the system. Specific attention was given to the systems behavior with different initial projectile velocities, impact parameters, energy loss rates and power dependence in the force law itself.
 \end{abstract}\maketitle
 \section{Introduction}
-When two classical objects physically collide they experience a normal force between them. In the simplest case, that of two spherical masses, the normal force is orthogonal to the surface and is in line with the center of mass for both the objects. The magnitude of the normal force between masses $m_{1}$, $m_{2}$ with radii $r_{1}$, $r_{2}$ can be modeled as $ \left| F \right| = k \left(\Delta x\right)^{\lambda}$, where $\Delta x = r_1 + r_2 - \left| \mathbf{x}^{(1)}-\mathbf{x}^{(2)} \right|$ is the displacement from equilibrium and $k$ is an effective spring constant. Setting $\lambda = 1$ results in the familiar Hook's Law spring force, but by including the $\lambda$ power dependence we are able to study a wider array of collisions, particularly those where the masses deform enough that the normal force between them becomes nonlinear. It is possible and sometimes even desirable to design a system with $\lambda \neq 1$~\cite{ref_spring}. As the masses deform and push against each other some of the mechanical energy of the system may be lost to internal degrees of freedom, such as heat. One way to model these inelastic collisions is by including viscous damping proportional to the velocity, which was the method used in this study.
+When two classical objects physically collide they experience a normal force between them. In the simplest case, that of two spherical masses, the normal force is orthogonal to the surface and is in line with the center of mass for both the objects. The magnitude of the normal force between masses $m_{1}$, $m_{2}$ with radii $r_{1}$, $r_{2}$ can be modeled as $ \left| F \right| = k \left(\Delta x\right)^{\lambda}$, where $\Delta x = r_1 + r_2 - \left| \mathbf{x}^{(1)}-\mathbf{x}^{(2)} \right|$ is the displacement from equilibrium and $k$ is an effective spring constant. Setting $\lambda = 1$ results in the familiar Hook's Law spring force, but by including the $\lambda$ power dependence we are able to study a wider array of collisions, particularly those where the masses deform enough that the normal force between them becomes nonlinear. It is possible, and sometimes even desirable, to design a system with $\lambda \neq 1$~\cite{ref_spring}. As the masses deform and push against each other some of the mechanical energy of the system may be lost to internal degrees of freedom, such as heat. One way to model these inelastic collisions is by including viscous damping proportional to the velocity, which was the method used in this study.
 
-Any two body collision can be reduced to 2-dimensional motion in a plane containing both masses and their initial velocity vectors. Additionally, in this paper we limit ourselves to the case where the initial velocities are parallel, though the masses may be initially off center from each other by a distance $s$, the impact parameter. One of the masses, the target $m_{1}$, may be at rest initially, though we also allow it to have an initial closing velocity in some studies. For convenience we pick our coordinate system such that all the initial velocities lie along $\hat{x}$ and the target is on the $\hat{y}$ axis, $y_{1}(t=0)=0$ (Figure~\ref{fig:schematic}).
+Any two body collision can be reduced to 2-dimensional motion in a plane containing both masses and their initial velocity vectors. Additionally, in this paper we limit ourselves to the case where the initial velocities are parallel, though the masses may be initially off center from each other by a distance $s$, the impact parameter. One of the masses, the target $m_{1}$, may be at rest initially, though we also allow it to have an initial closing velocity in some studies. For convenience we pick our coordinate system such that all the initial velocities lie along $\hat{\mathbf{x}}$ and the target is on the $\hat{\mathbf{y}}$ axis, $y_{1}(t=0)=0$ (Figure~\ref{fig:schematic}).
 
 \begin{figure}[htbc]
   \centering
-  \includegraphics[width=.75\textwidth]{plots/cj_diag.pdf}
+  \includegraphics[width=.70\textwidth]{plots/cj_diag.pdf}
 	          {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
 	          \caption{Schematic View of the initial state at first contact, $t = 0$.}
 	          \label{fig:schematic}
@@ -60,7 +60,7 @@ In order to rapidly investigate the many possible variations of this seemingly s
   \left| F \right| = k \left(\Delta x_{n-1}\right)^{\lambda},\quad \mathbf{\hat{F}}_{j\rightarrow i} = \frac{\mathbf{x}^{(i)}_{n-1}-\mathbf{x}^{(j)}_{n-1}}{\left|\mathbf{x}^{(i)}_{n-1}-\mathbf{x}^{(j)}_{n-1}\right|}
 \end{equation}
 
-In addition to the position and velocity of the masses we also calculate their kinetic energies and the potential energy stored in the deformed bodies, e.g. spring \eqref{eq:energy}. The force is conservative, so $\mathbf{F} = - \nabla V \rightarrow V = \int \left|F\right| d\left(\Delta x\right)$. With a small enough $\Delta t$ these iterative equations model the physics of the interaction very well. To ensure that $\Delta t$ is not set too large the code checks each masses change in position at every time step. If the change in position is larger than 1\% of the masses radius a warning is generated and the simulation is re-run with a smaller $\Delta t$. Throughout the rest of this paper SI units are assumed where none are given.
+In addition to the position and velocity of the masses we also calculate their kinetic energies and the potential energy stored in the deformed bodies \eqref{eq:energy}. The force is conservative, so $\mathbf{F} = - \nabla V \rightarrow V = \int \left|F\right| d\left(\Delta x\right)$. With a small enough $\Delta t$ these iterative equations model the physics of the interaction very well. To ensure that $\Delta t$ is not set too large the code checks each masses change in position at every time step. If the change in position is larger than 1\% of the masses radius a warning is generated and the simulation is re-run with a smaller $\Delta t$. Throughout the rest of this paper SI units are assumed where none are given.
 \begin{equation}\label{eq:energy}
   V_n = \frac{k}{\lambda+1}\left(\Delta x_n\right)^{\lambda+1},\quad T_n = \frac{m_1}{2}\left(\dot{\mathbf{x}}^{(1)}_n\right)^2 + \frac{m_2}{2}\left(\dot{\mathbf{x}}^{(2)}_n\right)^2
 \end{equation}
@@ -73,11 +73,11 @@ One of the first tasks was to validate the simulation framework using a system w
   \includegraphics[width=.45\textwidth]{plots/default/x_vs_y_with_ellipse.pdf}
   \includegraphics[width=.45\textwidth]{plots/default/x_vs_y_with_ellipse_MS.pdf}
                   {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
-                  \caption{(L) The initial state of the system when the objects come in contact. The collections of points (which form a continuous line) show the position of the center of each object at each time step while the objects are in contact. (R) The state of the system when the objects are at a minimum separation i.e. maximum $\Delta x$ from equilibrium.}
+                  \caption{(L) The initial state of the system when the objects come in contact. The collections of points (which form a continuous line) show the position of the center of each object at each time step while the objects are in contact. (R) The state of the system when the objects center of masses are at a minimum separation i.e. maximum $\Delta x$ from equilibrium.}
                   \label{fig:tracks_default}
 \end{figure}
 
-Potential and kinetic energy of the system is tracked throughout the simulation steps giving us the ability to moniter total energy conservation. It also allows us to visualize the flow of energy throughout the system. For the default configuration, that energy flow is shown in Figure~\ref{fig:energy_default}. It can be seen that the total energy trend is not completely constant. This is believed to be from the approximate quality of the simulation using finite time steps. The discrepancy is very small.
+Potential and kinetic energy of the system is tracked throughout the simulation steps giving us the ability to moniter total energy conservation. It also allows us to visualize the flow of energy throughout the system. For the default configuration, that energy flow is shown in Figure~\ref{fig:energy_default}. It can be seen that the total energy trend is not completely constant, but the discrepancy is very small. This is believed to be from the approximate quality of the simulation using finite time steps.
 \begin{figure}
   \includegraphics[width=.8\textwidth]{plots/default/E_vs_t.pdf}
                   {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
@@ -86,34 +86,34 @@ Potential and kinetic energy of the system is tracked throughout the simulation 
 \end{figure}
 
 \subsubsection{Equal masses, zero net momentum}
-Another system we investigated for validation was a system with two identical objects colliding with each other at equal but opposite velocities. In this system the objects have equal density with a radius of 1 and the initial velocities are $5$ and $-5$, respectively; the force constant was $k = 1000$ and $\lambda = 1$. The observed behavior is present in Figures~\ref{fig:tracks_c6}~and~\ref{fig:vx_c6}. The trends for the motions of the objects are as expected, specifically we were looking for antisymmetric velocity trends and constant system center of mass momentum.
+Another system we investigated for validation was a system with two identical objects colliding with each other at equal but opposite velocities. In this system the objects have equal density with a radius of 1 and the initial velocities are $5$ and $-5$, respectively; the force constant was $k = 1000$, and $\lambda = 1$ (Figures~\ref{fig:tracks_c6}~and~\ref{fig:vx_c6}). The trends for the motions of the objects are as expected, specifically we were looking for antisymmetric velocity trends and constant system center of mass momentum.
 \begin{figure}[h!]
   \includegraphics[width=.45\textwidth]{plots/out_c6/x_vs_y_with_ellipse.pdf}
   \includegraphics[width=.45\textwidth]{plots/out_c6/x_vs_y_with_ellipse_MS.pdf}
                   {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
-                  \caption{(L) Object initial state, with tracks points (R) Objects at minimum separation, with track points}
+                  \caption{Track points overlayed with the initial state (L), and objects at minimum separation (R).}
                   \label{fig:tracks_c6}
 \end{figure}
 \begin{figure}[h!]
   \includegraphics[width=.45\textwidth]{plots/out_c6/vx_vs_t.pdf}
                   {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
-                  \caption{The velocity in the $x$ direction for both objects. The trend shows that the objects slow as the come together, come to rest, and move off in opposite directions again. As expected the system's center of mass velocity is zero.}
+                  \caption{The velocity along the $\hat{\mathbf{x}}$ axis for both objects. The trend shows that the objects slow as they come together, stop, and then move off in opposite directions again. As expected the system's center of mass velocity is zero.}
                   \label{fig:vx_c6}
 \end{figure}
 
 \subsubsection{Large, slow moving target with small, fast projectile}
-The final validation system we investigated was made up of a target with mass 30 and radius 3 moving with velocity $-2$ and a projectile with mass 1 and radius 1 moving with velocity 8; the force constant was $k = 1000$ and $\lambda = 1$. The impact parameter was set to 0. For this system we were looking for large momentum transfer to the projectile (essentially being quickly turned around by the slightly effected target). Figure~\ref{fig:tracks_c7} shows the object trajectories. Figure~\ref{fig:vx_c7} shows the horizontal velocities for the system. As expectd, the large and slow target is slightly effected and its motion remains in the same direction, while the small and fast projectile is deflected against the target and moves away at a faster velocity compared to its incoming velocity.
+The final validation system we investigated was made up of a target with mass 30 and radius 3 moving with velocity $-2$ and a projectile with mass 1 and radius 1 moving with velocity 8; the force constant was $k = 1000$ and $\lambda = 1$. The impact parameter was set to 0. For this system we were looking for large momentum transfer to the projectile, essentially being quickly turned around by the much more massive target which is only slightly affected.  The object trajectories (Figure~\ref{fig:tracks_c7}) and $\hat{\mathbf{x}}$ velocities for the system (Figure~\ref{fig:vx_c7}) were again plotted. As expected, the large, slow moving target is slightly effected and its motion remains in the same direction, while the small and fast projectile is deflected against the target and leaves the collision at a higher velocity than its incoming velocity.
 \begin{figure}[h!]
   \includegraphics[width=.45\textwidth]{plots/out_c7/x_vs_y_with_ellipse.pdf}
   \includegraphics[width=.45\textwidth]{plots/out_c7/x_vs_y_with_ellipse_MS.pdf}
                   {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
-                  \caption{(L) Object initial state, with tracks points (R) Objects at minimum separation, with track points}
+                  \caption{Track points overlayed with the initial state (L), and objects at minimum separation (R).}
                   \label{fig:tracks_c7}
 \end{figure}
 \begin{figure}[floatfix]
   \includegraphics[width=.45\textwidth]{plots/out_c7/vx_vs_t.pdf}
                   {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
-                  \caption{The velocity trend for each object and the center of mass. The velocity of the target is slightly changed, and stays in the same direction (to the left), while the incoming projectile is quickly turned around and given a larger velocity in the opposite direction compared to where it came out.}
+                  \caption{The velocity trend for each object and the center of mass. The velocity of the target is slightly changed, and stays in the same direction (to the left), while the incoming projectile is quickly turned around and given a larger velocity in the opposite direction compared to its initial velocity.}
                   \label{fig:vx_c7}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% trend studies %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
