@@ -110,7 +110,7 @@ The final validation system we investigated was made up of a target with mass 30
                   \caption{(L) Object initial state, with tracks points (R) Objects at minimum separation, with track points}
                   \label{fig:tracks_c7}
 \end{figure}
-\begin{figure}[h!]
+\begin{figure}[floatfix]
   \includegraphics[width=.45\textwidth]{plots/out_c7/vx_vs_t.pdf}
                   {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
                   \caption{The velocity trend for each object and the center of mass. The velocity of the target is slightly changed, and stays in the same direction (to the left), while the incoming projectile is quickly turned around and given a larger velocity in the opposite direction compared to where it came out.}
@@ -119,7 +119,7 @@ The final validation system we investigated was made up of a target with mass 30
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% trend studies %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Initial Velocity Studies}
 Many systems were simulated where we varied the initial velocity. Figure~\ref{fig:changing_pvinit1}(L) shows the maximum displacement from the ``spring'' equilibrium position versus initial velocity of the projectile. All of these systems were consistent in other parameters. This includes target radius and mass of 2, projectile radius of 0.25 and radius of 1 (equal densities). The impact parameter was 1, $\eta = 0$, and $\lambda = 1$. The asymptote at $\Delta x_{\text{max}}/r_t$ at 1 shows that as the initial velocity of the projectile increases, the impact reaches the radius of the target. Figure~\ref{fig:changing_pvinit1}(R) shows the energy loss per initial energy for the sample of systems. A perfect system would have a flat line at zero, but we are using finite time steps with this computational approximaton, therefore we have a slight gain in energy for low initial velocities. Figure~\ref{fig:energy_default} shows a a small increase in total energy for that particular system.
-\begin{figure}[h!]
+\begin{figure}[floatfix]
   \includegraphics[width=.45\linewidth]{plots/trend_plots/dxmax_vs_pvinit.pdf}
   \includegraphics[width=.45\linewidth]{plots/trend_plots/Eloss_vs_pvinit.pdf}
                   {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
@@ -165,7 +165,9 @@ Many systems were simulated where we varied the energy dissipation parameter $\e
 
 
 \section{Conclusion}
-The
+The simulation developed in this study performed well in general. It was sucessfully used to investigate a variety of two-body collisions. The three validation systems all displayed the expected behavior, specifically momentum conservation, as seen in a constant velocity system center of mass, and the conservation of energy. The simulated total energy of the systems did vary slightly, usually increasing over time, but it is a relativly small effect. Having a more developed simulation with potentially smaller time steps and higher floating point precision would likely reduce these total energy fluctuations.
+
+The final velocity and maximum displacement results when varying the projectiles initial velocity and the inpact parameter largely matched our expectations. However, while varying the force power law, $\lambda$, the maximum displacement decreased with increasing $\lambda$ which was unexpected. We believe that this inverse relationship beween $\lambda$ and $\Delta x_{max}$ is due to all of our simulations having $\Delta x \leq 1$, additional studies could modify the initial parameters to investigate this theory further in the case where $\Delta x \geq 1$. When we included a non-zero energy disipation coefficent, $\eta$ we observed a very rapid decay of the total energy and hence final velocity. This general behvior was expected, but not to the degree seen. An improved method of including energy disipation for future simulations would be to normalize the energy lost per time step to $\Delta t$ by altering $\left(1-\eta\right)~\rightarrow~\left(1-\eta\right)\Delta t$ so that the energy loss per unit time is independent of the number of time steps used to simulate that unit time. 
 
 \clearpage
 \begin{thebibliography}{9}
@@ -176,11 +178,11 @@ The
 \end{thebibliography}
 
 \clearpage
-%\begin{appendices}
-%  \singlespacing
-%  \section{main.cpp Physics Loop} \label{sec:main.cpp}
-%  \lstinputlisting[firstline=170, lastline=246]{../main.cpp}% lots of pages, only uncomment when you want it
+\begin{appendices}
+  \singlespacing
+  \section{main.cpp Physics Loop} \label{sec:main.cpp}
+  \lstinputlisting[firstline=170, lastline=246]{../main.cpp}% lots of pages, only uncomment when you want it
 
-%\end{appendices}
+\end{appendices}
 
 \end{document}
