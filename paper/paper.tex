@@ -128,7 +128,7 @@ Many systems were simulated where we varied the initial velocity. Figure~\ref{fi
 \end{figure}
 
 \subsection{Impact Parameter Studies}
-Many systems were simulated where we varied the impact parameter. Similar to the previous study, we again look at the trend of maximum displacement from equilibrium versus the varying parameter, which is now the impact parameter. During the generation of this sample, all other paramters were constant: target radius and mass of 2, projectile radius of 0.25 and radius of 1 (equal densities). The projectile initial velocity was 5, $\eta = 0$, and $\lambda = 1$. The trend shows that as the collision point becomes more off-center with respect to the target, the smaller the spring action between the two objects.
+Many systems were simulated where we varied the impact parameter. Similar to the previous study, we again look at the trend of maximum displacement from equilibrium versus the varying parameter, which is now the impact parameter. During the generation of this sample, all other paramters were constant: target radius and mass of 2, projectile radius of 0.25 and radius of 1 (equal densities). The projectile initial velocity was 5, $\eta = 0$, $\Delta t = 0.0001$, and $\lambda = 1$. The trend shows that as the collision point becomes more off-center with respect to the target, the smaller the spring action between the two objects.
 \begin{figure}[h!]
   \includegraphics[width=.45\linewidth]{plots/trend_plots/Eloss_vs_s.pdf}
                   {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
@@ -145,7 +145,7 @@ Figure~\ref{fig:changing_s2} shows the trend of the final velocities of the obje
 \end{figure}
 
 \subsection{Force Power Law Dependence}
-Many systems were simulated where we varied the force power law parameter $\lambda$. We varied $\lambda$ from $1/2$ to $3$, which corresponds to a force law depending on the square root of the displacement up to depending on the cube of the displacement. Figure~\ref{fig:changing_lambda} shows this sample of maximum displacement from equilibrium versus the force law power. The trend has a positive slope throughout. This is unexpected, as we thought a larger $\lambda$ would correspond to a stronger restoring force between the objects, causing a smaller deformation. We now believe this is because all of the displacement values, $\Delta x$, are less than 1.
+Many systems were simulated where we varied the force power law parameter $\lambda$. We varied $\lambda$ from $1/2$ to $3$, which corresponds to a force law depending on the square root of the displacement up to depending on the cube of the displacement. The other parameters for all simulated systems: target radius and mass of 2, projectile radius of 0.25 and radius of 1 (again, equal densities). The projectile velocity was again 5 and $\eta = 0$. Figure~\ref{fig:changing_lambda} shows this sample of maximum displacement from equilibrium versus the force law power. The trend has a positive slope throughout. This is unexpected, as we thought a larger $\lambda$ would correspond to a stronger restoring force between the objects, causing a smaller deformation. We now believe this is because all of the displacement values, $\Delta x$, are less than 1.
 \begin{figure}[h!]
   \includegraphics[width=.45\linewidth]{plots/trend_plots/dxmax_vs_lambda.pdf}
                   {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
@@ -154,8 +154,8 @@ Many systems were simulated where we varied the force power law parameter $\lamb
 \end{figure}
 
 \subsection{Energy Dissipation Studies}
-Many systems were simulated where we varied the energy dissipation parameter $\eta$. Figure~\ref{fig:changing_eta}.
-\begin{figure}[h!]
+Many systems were simulated where we varied the energy dissipation parameter $\eta$. Other system parameters included: target radius and mass of 2, projectile radius of 0.25 and radius of 1 (again, equal densities). The projectile velocity was again 5 and $\lambda = 0$. Figure~\ref{fig:changing_eta}(L) shows the trend for the maximum displacement from equilibrium versus the energy dissipation parameter. This shows that the larger the energy dissipation parameter, the smaller the deformation between the projectile and the target. Figure~\ref{fig:changing_eta}(R) shows the trend for the energy loss per initial energy versus energy dissipation parameter. We see in this trend that at a certain $\eta$, the final total energy of the system approaches zero.
+\begin{figure}
   \includegraphics[width=.45\linewidth]{plots/trend_plots/dxmax_vs_eta.pdf}
   \includegraphics[width=.45\linewidth]{plots/trend_plots/Eloss_vs_eta.pdf}
                   {\par\nobreak\rule[9pt]{35em}{0.5pt}\vspace{-5mm}}
